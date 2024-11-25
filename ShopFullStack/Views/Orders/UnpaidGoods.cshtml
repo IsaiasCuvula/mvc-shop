@@ -1,0 +1,26 @@
+@model IEnumerable<ShopApi.Models.Order>
+
+<div class="container">
+    <h2>Mercadorias Não Pagas</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Produto</th>
+            <th>Data do Pedido</th>
+            <th>Valor</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Customer.Name</td>
+                <td>@order.Product.Description</td>
+                <td>@order.OrderDate.ToShortDateString()</td>
+                <td>@order.Product.Price.ToString("C")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,27 @@
+@* RecentCustomers.cshtml *@
+@model IEnumerable<ShopApi.Models.Customer>
+
+<div class="container">
+    <h2>Clientes que Compraram na Última Semana</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <th>Cidade</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>@customer.Name</td>
+                <td>@customer.Email</td>
+                <td>@customer.Phone</td>
+                <td>@customer.City</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

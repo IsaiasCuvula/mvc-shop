@@ -13,6 +13,9 @@ public class Order
    public long CustomerNumber {get;set;}
    [Column("product_number")]
    public long ProductNumber { get; set; }
+   
+   public Product? Product { get; set; }
+   
    [Column("quantity")]
    public int Quantity {get;set;}
    [Column("order_date")]
