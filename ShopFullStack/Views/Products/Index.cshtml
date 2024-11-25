@@ -1,0 +1,43 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<ShopApi.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h1>Products</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Product</a>
+</p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Product Number</th>
+        <th>Brand</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Expiration Date</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ProductNumber</td>
+            <td>@item.Brand</td>
+            <td>@item.Description</td>
+            <td>@item.Price</td>
+            <td>@item.ExpirationDate.ToShortDateString()</td>
+            <td>@item.Quantity</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductNumber" class="btn btn-warning">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.ProductNumber" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
