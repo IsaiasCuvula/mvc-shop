@@ -20,7 +20,9 @@ public class HomeController: Controller
 
     public async Task<IActionResult> Index()
     {
-        return View(await _productService.GetAllProducts());
+        //var products = await _productService.GetMostPopularProducts();
+        var products = await _productService.GetAllProducts();
+        return View(products);
     }
 
     public IActionResult Privacy()
