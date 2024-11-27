@@ -19,6 +19,11 @@ public class ProductController: Controller
         return View(products);
     }
     
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+    
     [HttpGet]
     public async Task<ActionResult<ApiResponse<List<Product>>>> GetAllProducts()
     {

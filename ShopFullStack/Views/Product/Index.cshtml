@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <h5 class="card-title">@prod.Name</h5>
                         <p class="card-text">@prod.Description</p>
-                        <p class="card-text">@prod.Price</p>
+                        <p class="card-text">$@prod.Price</p>
                         <p class="card-text"> Quantity in Stock: @prod.Stock</p>
                         <a class="btn btn-info" asp-controller="Product" asp-action="AddEdit"
                            asp-route-id="@prod.Id"><i class="bi bi-pencil-fill">Edit</i> </a>
