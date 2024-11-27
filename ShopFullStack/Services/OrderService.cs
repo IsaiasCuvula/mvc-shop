@@ -1,12 +1,12 @@
-using ShopApi.Dtos;
-using ShopApi.Mappers;
-using ShopApi.Models;
-using ShopApi.Repositories;
-using ShopApi.Repositories.Orders;
-using ShopApi.Repositories.Product;
-using ShopApi.Utilities;
+using ShopFullStack.Dtos;
+using ShopFullStack.Mappers;
+using ShopFullStack.Models;
+using ShopFullStack.Repositories;
+using ShopFullStack.Repositories.Orders;
+using ShopFullStack.Repositories.Product;
+using ShopFullStack.Utilities;
 
-namespace ShopApi.Services;
+namespace ShopFullStack.Services;
 
 public class OrderService
 {

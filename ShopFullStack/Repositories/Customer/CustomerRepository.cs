@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using ShopApi.Data;
-using ShopApi.Models;
-using ShopApi.Utilities;
+using ShopFullStack.Data;
+using ShopFullStack.Models;
+using ShopFullStack.Utilities;
 
-namespace ShopApi.Repositories;
+namespace ShopFullStack.Repositories;
 
 public class CustomerRepository: ICustomerRepository
 {

@@ -1,4 +1,4 @@
-namespace ShopApi.Models;
+namespace ShopFullStack.Models;
 
 public class ApiResponse<T>
 {

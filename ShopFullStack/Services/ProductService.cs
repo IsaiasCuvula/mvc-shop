@@ -1,10 +1,10 @@
-using ShopApi.Dtos;
-using ShopApi.Mappers;
-using ShopApi.Models;
-using ShopApi.Repositories.Orders;
-using ShopApi.Repositories.Product;
+using ShopFullStack.Dtos;
+using ShopFullStack.Mappers;
+using ShopFullStack.Models;
+using ShopFullStack.Repositories.Orders;
+using ShopFullStack.Repositories.Product;
 
-namespace ShopApi.Services;
+namespace ShopFullStack.Services;
 
 public class ProductService
 {
@@ -224,22 +224,16 @@ public class ProductService
         }
     }
 
-    public async Task<ApiResponse<List<Product>>> GetAllProducts()
+    public async Task<List<Product>> GetAllProducts()
     {
-        ApiResponse<List<Product>> response = new ApiResponse<List<Product>>();
         try
         {
-          var products = await _productRepository.GetAllAsync();
-          response.Data = products;
-          response.Message = products.Count == 0 ? "There is no product created yet":"Products successfully retrieved";
-          return response;
+            return await _productRepository.GetAllAsync();
         }
         catch (Exception e)
         {
-            response.Message = e.Message;
-            response.Status = false;
             Console.WriteLine($"Failed to get all products: {e}");
-            return response;
+            return [];
         }
     }
 }

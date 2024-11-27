@@ -1,6 +1,6 @@
-using ShopApi.Models;
+using ShopFullStack.Models;
 
-namespace ShopApi.Repositories;
+namespace ShopFullStack.Repositories;
 
 public interface ICustomerRepository
 {

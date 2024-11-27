@@ -1,4 +1,4 @@
-namespace ShopApi.Dtos;
+namespace ShopFullStack.Dtos;
 
 public record UserOrdersDto(
     decimal DeliveryPrice,

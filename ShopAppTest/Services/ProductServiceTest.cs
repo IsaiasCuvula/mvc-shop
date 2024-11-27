@@ -1,9 +1,9 @@
 using Moq;
-using ShopApi.Dtos;
-using ShopApi.Models;
-using ShopApi.Repositories.Orders;
-using ShopApi.Repositories.Product;
-using ShopApi.Services;
+using ShopFullStack.Dtos;
+using ShopFullStack.Models;
+using ShopFullStack.Repositories.Orders;
+using ShopFullStack.Repositories.Product;
+using ShopFullStack.Services;
 
 namespace ShopApiTest.Services;
 

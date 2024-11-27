@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ShopApi.Data;
-using ShopApi.Repositories;
-using ShopApi.Repositories.Orders;
-using ShopApi.Repositories.Product;
-using ShopApi.Services;
+using ShopFullStack.Data;
+using ShopFullStack.Repositories;
+using ShopFullStack.Repositories.Orders;
+using ShopFullStack.Repositories.Product;
+using ShopFullStack.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,7 +61,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
+        pattern: "{controller=Product}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.MapRazorPages()

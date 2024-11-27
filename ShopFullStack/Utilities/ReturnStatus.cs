@@ -1,4 +1,4 @@
-namespace ShopApi.Utilities;
+namespace ShopFullStack.Utilities;
 
 public enum ReturnStatus
 {

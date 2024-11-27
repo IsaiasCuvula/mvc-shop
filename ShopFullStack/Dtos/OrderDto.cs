@@ -1,6 +1,6 @@
-using ShopApi.Utilities;
+using ShopFullStack.Utilities;
 
-namespace ShopApi.Dtos;
+namespace ShopFullStack.Dtos;
 
 public record OrderDto(
         long CustomerNumber,

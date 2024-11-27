@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using ShopApi.Data;
+using ShopFullStack.Data;
 
-namespace ShopApi.Repositories.Product;
+namespace ShopFullStack.Repositories.Product;
 using Models; 
 
 public class ProductRepository: IProductRepository

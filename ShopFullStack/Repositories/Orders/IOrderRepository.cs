@@ -1,6 +1,6 @@
-using ShopApi.Models;
+using ShopFullStack.Models;
 
-namespace ShopApi.Repositories.Orders;
+namespace ShopFullStack.Repositories.Orders;
 
 public interface IOrderRepository
 {

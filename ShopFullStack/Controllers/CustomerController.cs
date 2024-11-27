@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using ShopApi.Dtos;
-using ShopApi.Models;
-using ShopApi.Services;
+using ShopFullStack.Dtos;
+using ShopFullStack.Models;
+using ShopFullStack.Services;
 
-namespace ShopApi.Controllers;
+namespace ShopFullStack.Controllers;
 
 [Route("api/v1/customers")]
 [ApiController]

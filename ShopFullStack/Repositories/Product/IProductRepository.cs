@@ -1,5 +1,5 @@
 
-namespace ShopApi.Repositories.Product;
+namespace ShopFullStack.Repositories.Product;
 using Models; 
 
 public interface IProductRepository

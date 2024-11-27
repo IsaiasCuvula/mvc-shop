@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace ShopApi.Models;
+namespace ShopFullStack.Models;
 
 [Table("customers")]
 public class Customer

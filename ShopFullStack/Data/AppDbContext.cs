@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ShopApi.Models;
+using ShopFullStack.Models;
 
-namespace ShopApi.Data;
+namespace ShopFullStack.Data;
 
 public class AppDbContext: IdentityDbContext
 {

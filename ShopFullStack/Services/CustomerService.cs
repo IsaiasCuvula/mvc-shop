@@ -1,10 +1,10 @@
-using ShopApi.Dtos;
-using ShopApi.Mappers;
-using ShopApi.Models;
-using ShopApi.Repositories;
-using ShopApi.Repositories.Orders;
+using ShopFullStack.Dtos;
+using ShopFullStack.Mappers;
+using ShopFullStack.Models;
+using ShopFullStack.Repositories;
+using ShopFullStack.Repositories.Orders;
 
-namespace ShopApi.Services;
+namespace ShopFullStack.Services;
 
 public class CustomerService
 {

@@ -1,19 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
-using ShopApi.Dtos;
-using ShopApi.Models;
-using ShopApi.Services;
+using ShopFullStack.Dtos;
+using ShopFullStack.Models;
+using ShopFullStack.Services;
+namespace ShopFullStack.Controllers;
 
-namespace ShopApi.Controllers;
-
-[Route("api/v1/products")]
-[ApiController]
-public class ProductController: ControllerBase
+public class ProductController: Controller
 {
     private readonly ProductService _productService;
 
     public ProductController(ProductService productService)
     {
         _productService = productService;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var products = await _productService.GetAllProducts();
+        return View(products);
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult<ApiResponse<List<Product>>>> GetAllProducts()
+    {
+        var products = await _productService.GetAllProducts();
+        return Ok(products);
     }
     
     [HttpGet("most-popular")]
@@ -60,13 +70,6 @@ public class ProductController: ControllerBase
     public async Task<ActionResult<ApiResponse<Product>>> GetProductById(long id)
     {
         return Ok(await _productService.GetProductById(id));
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<ApiResponse<List<Product>>>> GetAllProducts()
-    {
-        var products = await _productService.GetAllProducts();
-        return Ok(products);
     }
     
     [HttpDelete("{id}")]

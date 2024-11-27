@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
-namespace ShopApi.Models;
+
+namespace ShopFullStack.Models;
 
 [Table("products")]
 public class Product

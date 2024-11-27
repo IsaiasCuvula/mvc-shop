@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using ShopApi.Utilities;
+using ShopFullStack.Utilities;
 
-namespace ShopApi.Models;
+namespace ShopFullStack.Models;
 
 [Table("orders")]
 public class Order

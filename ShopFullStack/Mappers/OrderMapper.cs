@@ -1,8 +1,8 @@
-using ShopApi.Dtos;
-using ShopApi.Models;
-using ShopApi.Utilities;
+using ShopFullStack.Dtos;
+using ShopFullStack.Models;
+using ShopFullStack.Utilities;
 
-namespace ShopApi.Mappers;
+namespace ShopFullStack.Mappers;
 
 public class OrderMapper
 {

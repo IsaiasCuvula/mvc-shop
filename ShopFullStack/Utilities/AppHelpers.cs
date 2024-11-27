@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace ShopApi.Utilities;
+namespace ShopFullStack.Utilities;
 
 public class AppHelpers
 {
