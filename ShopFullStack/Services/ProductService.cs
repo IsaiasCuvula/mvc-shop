@@ -17,9 +17,8 @@ public class ProductService
         _orderRepository = orderRepository;
     }
 
-    public async Task<ApiResponse<List<Product>>> GetMostPopularProducts()
+    public async Task<List<Product>> GetMostPopularProducts()
     {
-        ApiResponse<List<Product>> response = new ApiResponse<List<Product>>();
         Dictionary<long, int> productsCount = new Dictionary<long, int>();
         List<Product> popularProducts = new List<Product>();
 
@@ -38,7 +37,8 @@ public class ProductService
                     productsCount[order.ProductNumber] = order.Quantity;
                 }
             }
-            var sortedProducts = productsCount.OrderByDescending(x => x.Value);
+            var sortedProducts = productsCount
+                .OrderByDescending(x => x.Value);
             foreach (var dic in sortedProducts)
             {
                 var product = await _productRepository.GetByNumberAsync(dic.Key);
@@ -47,16 +47,12 @@ public class ProductService
                     popularProducts.Add(product);
                 }
             }
-            response.Data = popularProducts;
-            response.Message = popularProducts.Count == 0 ? "There is no most popular product yet":"All most popular products successfully retrieved";
-            return response;
+            return popularProducts;
         }
         catch (Exception e)
         {
-            response.Message = e.Message;
-            response.Status = false;
             Console.WriteLine($"Failed to get the most popular products: {e}");
-            return response;
+            return [];
         }
     }
     
