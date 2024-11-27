@@ -1,6 +1,7 @@
 namespace ShopFullStack.Dtos;
 
 public record ProductDto(
+         string Name,
          string Brand,
          string Description,
          decimal Price,

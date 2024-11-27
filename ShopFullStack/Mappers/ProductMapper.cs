@@ -10,10 +10,11 @@ public class ProductMapper
     {
         return new Product
         {
+            Name = dto.Name,
             Brand = dto.Brand,
-            Image = dto.Image,
+            ImageUrl = dto.Image,
             ProductNumber = AppHelpers.GenerateRandomNumber(),
-            Quantity = dto.Quantity,
+            Stock = dto.Quantity,
             ExpirationDate = dto.ExpirationDate.ToUniversalTime(),
             Price = dto.Price,
             Description = dto.Description 

@@ -132,8 +132,8 @@ public class ProductService
             product.Brand = dto.Brand;
             product.Description = dto.Description;
             product.Price = dto.Price;
-            product.Image = dto.Image;
-            product.Quantity = dto.Quantity;
+            product.ImageUrl = dto.Image;
+            product.Stock = dto.Quantity;
             product.ExpirationDate = dto.ExpirationDate;
             
             var updatedProduct = await _productRepository.UpdateAsync(product);

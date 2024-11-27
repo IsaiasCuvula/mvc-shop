@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using ShopFullStack.Utilities;
 
 namespace ShopFullStack.Models;
@@ -13,7 +14,8 @@ public class Order
    public long CustomerNumber {get;set;}
    [Column("product_number")]
    public long ProductNumber { get; set; }
-   
+  
+   [ValidateNever]
    public Product? Product { get; set; }
    
    [Column("quantity")]
@@ -31,6 +33,6 @@ public class Order
    [Column("group_order_id")]
    public String GroupOrderId { get; set; }
    
-   [Column("customer_id"), JsonIgnore]
-   public Customer Customer {get;set;}
+   [Column("customer_id"), JsonIgnore, ValidateNever]
+   public Customer? Customer {get;set;}
 }

@@ -36,15 +36,17 @@ public class ProductServiceTest
         var expectedProduct = new Product()
         {
             Id = productId,
+            Name = "Fertilizer",
             Brand = "Green Thumb",
             Description = "Organic Fertilizer (5lb Bag)",
             Price = 14.99m,
             ExpirationDate = dateTime,
-            Quantity = 75,
+            Stock = 75,
             ProductNumber = 100005,
-            Image = "fertilizer.jpg"
+            ImageUrl = "fertilizer.jpg"
         };
         var dto =new ProductDto(
+              "Fertilizer",
             "Green Thumb",
             "Organic Fertilizer (5lb Bag)",
             14.99m,
@@ -83,13 +85,14 @@ public class ProductServiceTest
         var expectedProduct = new Product()
         {
             Id = productId,
+            Name = "Fertilizer",
             Brand = "Green Thumb",
             Description = "Organic Fertilizer (5lb Bag)",
             Price = 14.99m,
             ExpirationDate = dateTime,
-            Quantity = 75,
+            Stock = 75,
             ProductNumber = 100005,
-            Image = "fertilizer.jpg"
+            ImageUrl = "fertilizer.jpg"
         };
         
         //Arrange
@@ -123,13 +126,14 @@ public class ProductServiceTest
         var expectedProduct = new Product()
         {
             Id = productId,
+            Name = "Fertilizer",
             Brand = "Green Thumb",
             Description = "Organic Fertilizer (5lb Bag)",
             Price = 14.99m,
             ExpirationDate = dateTime,
-            Quantity = 75,
+            Stock = 75,
             ProductNumber = 100005,
-            Image = "fertilizer.jpg"
+            ImageUrl = "fertilizer.jpg"
         };
         
         //Arrange
@@ -161,57 +165,62 @@ public class ProductServiceTest
             new Product
             {
                 Id = 1,
+                Name = "Headphones",
                 Brand = "Acme Co.",
                 Description = "Wireless Bluetooth Headphones",
                 Price = 99.99m,
                 ExpirationDate = new DateTime(2030, 12, 31),
-                Quantity = 50,
+                Stock = 50,
                 ProductNumber = 100001,
-                Image = "headphones.jpg"
+                ImageUrl = "headphones.jpg"
             },
             new Product
             {
                 Id = 2,
+                Name = "Almond Milk",
                 Brand = "Fresh Farms",
                 Description = "Organic Almond Milk",
                 Price = 3.49m,
                 ExpirationDate = new DateTime(2024, 5, 15),
-                Quantity = 200,
+                Stock = 200,
                 ProductNumber = 100002,
-                Image = "almond_milk.jpg"
+                ImageUrl = "almond_milk.jpg"
             },
             new Product
             {
                 Id = 3,
                 Brand = "Eco Clean",
+                Name = "Dish Soap",
                 Description = "Biodegradable Dish Soap",
                 Price = 5.99m,
                 ExpirationDate = new DateTime(2026, 8, 20),
-                Quantity = 120,
+                Stock = 120,
                 ProductNumber = 100003,
-                Image = "dish_soap.jpg"
+                ImageUrl = "dish_soap.jpg"
             },
             new Product
             {
                 Id = 4,
+                Name = "TechLine",
                 Brand = "TechLine",
                 Description = "4K Ultra HD Smart TV",
                 Price = 399.99m,
                 ExpirationDate = new DateTime(2030, 12, 31),
-                Quantity = 10,
+                Stock = 10,
                 ProductNumber = 100004,
-                Image = "smart_tv.jpg"
+                ImageUrl = "smart_tv.jpg"
             },
             new Product
             {
                 Id = 5,
+                Name = "Fertilizer",
                 Brand = "Green Thumb",
                 Description = "Organic Fertilizer (5lb Bag)",
                 Price = 14.99m,
                 ExpirationDate = new DateTime(2025, 3, 1),
-                Quantity = 75,
+                Stock = 75,
                 ProductNumber = 100005,
-                Image = "fertilizer.jpg"
+                ImageUrl = "fertilizer.jpg"
             }
         };
 
@@ -222,7 +231,7 @@ public class ProductServiceTest
         //Act
         var result = await  _productService.GetAllProducts();
         //Assert
-        Assert.Equal(expectedProducts.Count, result.Data.Count);
+        Assert.Equal(expectedProducts.Count, result.Count);
         
         // Verify if the methods were called
         _productRepository.Verify(repo => repo.GetAllAsync(), Times.Once);
