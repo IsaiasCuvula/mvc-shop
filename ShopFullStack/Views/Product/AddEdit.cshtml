@@ -40,7 +40,7 @@
     <div class="form-group mb-2">
         <label asp-for="ExpirationDate">Expiration Date</label>
         <input asp-for="ExpirationDate" class="form-control" type="date" id="ExpirationDate" name="ExpirationDate"
-               value="@DateTime.Now.ToString("dd-MM-yyyy")" />
+               value="@(Model.ExpirationDate != default(DateTime) ? Model.ExpirationDate.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))" />
         <span asp-validation-for="ExpirationDate" class="text-danger"></span>
     </div>
 
