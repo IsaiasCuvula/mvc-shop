@@ -3,33 +3,49 @@
 @{
     ViewBag.Title = $"{ViewBag.Operation} Product";
 }
-<h1>@ViewBag.Operation Menu Item</h1>
+
+<h1>@ViewBag.Operation Product</h1>
+
 <form asp-action="AddEdit" method="post" enctype="multipart/form-data">
-    <div class="form-group">
+    <div class="form-group mb-2">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" type="text" id="Name" name="Name"/>
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-2">
+        <label asp-for="Brand"></label>
+        <input asp-for="Brand" class="form-control" type="text" id="Brand" name="Brand"/>
+        <span asp-validation-for="Brand" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group mb-2">
         <label asp-for="Description"></label>
         <input asp-for="Description" class="form-control" type="text" id="Description" name="Description"/>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-2">
         <label asp-for="Price"></label>
         <input asp-for="Price" class="form-control" type="number" id="Price" name="Price"/>
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-2">
         <label asp-for="Stock">Quantity in Stock</label>
         <input asp-for="Stock" class="form-control" type="number" id="Stock" name="Stock"/>
         <span asp-validation-for="Stock" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-2">
+        <label asp-for="ExpirationDate">Expiration Date</label>
+        <input asp-for="ExpirationDate" class="form-control" type="date" id="ExpirationDate" name="ExpirationDate"
+               value="@DateTime.Now.ToString("dd-MM-yyyy")" />
+        <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group mb-2">
         <label asp-for="ImageFile">Upload Image</label>
         <input asp-for="ImageFile" class="form-control" type="file" id="ImageFile" name="ImageFile"/>
         <span asp-validation-for="ImageFile" class="text-danger"></span>
@@ -64,6 +80,7 @@
     @*         } *@
     @*     </div> *@
     @* </div> *@
+    <div class="mb-3"></div>
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Index" asp-controller="Product" class="btn btn-outline-dark">Cancel</a>
 </form>
