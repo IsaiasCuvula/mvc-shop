@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using ShopFullStack.Dtos;
 using ShopFullStack.Models;
 using ShopFullStack.Services;
 namespace ShopFullStack.Controllers;
@@ -41,22 +40,29 @@ public class ProductController: Controller
                 return View(new Product());
             }
             
+            if (product.ImageFile != null)
+            {
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + product.ImageFile.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await product.ImageFile.CopyToAsync(fileStream);
+                }
+                product.ImageUrl = uniqueFileName;
+            }
+            
             //Add product 
             if (product.Id == 0)
             {
-                if (product.ImageFile != null)
-                {
-                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + product.ImageFile.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await product.ImageFile.CopyToAsync(fileStream);
-                    }
-                    product.ImageUrl = uniqueFileName;
-                }
                 await _productService.CreateProduct(product);
             }
+            else
+            {
+                // Update product
+                await _productService.UpdateProduct(product);
+            }
+            
             return RedirectToAction("Index", "Product");
         }
         catch (Exception e)
@@ -69,9 +75,9 @@ public class ProductController: Controller
     }
     
     //When user click on add new product on all product page 
-    //this method is called
+    //this method is called if id != 0 get product data to be updated
     [HttpGet]
-    public async Task<IActionResult> AddEdit(int id)
+    public async Task<IActionResult> AddEdit(long id)
     {
         ViewBag.Products = await _productService.GetAllProducts();
     
@@ -81,7 +87,7 @@ public class ProductController: Controller
             return View(new Product());
         }else
         {
-            ApiResponse<Product> response = await _productService.GetProductById(id);
+            var response = await _productService.GetProductById(id);
             ViewBag.Operation = "Edit";
             return View(response.Data);
         }

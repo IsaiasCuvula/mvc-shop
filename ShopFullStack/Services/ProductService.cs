@@ -1,5 +1,3 @@
-using ShopFullStack.Dtos;
-using ShopFullStack.Mappers;
 using ShopFullStack.Models;
 using ShopFullStack.Repositories.Orders;
 using ShopFullStack.Repositories.Product;
@@ -16,6 +14,69 @@ public class ProductService
     {
         _productRepository = productRepository;
         _orderRepository = orderRepository;
+    }
+    
+    public async Task<ApiResponse<Product>> UpdateProduct(Product product)
+    {
+        ApiResponse<Product> response = new ApiResponse<Product>();
+        try
+        {
+            var oldProduct = await _productRepository.GetByIdAsync(product.Id);
+            if (oldProduct == null)
+            {
+                response.Message = "Product not found";
+                return response;
+            }
+
+            if (product.ImageUrl != null)
+            {
+                oldProduct.ImageUrl = product.ImageUrl;
+            }
+            
+            oldProduct.Brand = product.Brand;
+            oldProduct.Description = product.Description;
+            oldProduct.ExpirationDate = product.ExpirationDate.ToUniversalTime();
+            oldProduct.Name = product.Name;
+            oldProduct.Price = product.Price;
+            oldProduct.ProductNumber = product.ProductNumber;
+            oldProduct.Stock = product.Stock;
+            
+            var updatedProduct = await _productRepository.UpdateAsync(oldProduct);
+           
+            response.Data = updatedProduct;
+            response.Message = "Product updated successfully";
+            return response;
+        }
+        catch (Exception e)
+        {
+            response.Message = e.Message;
+            response.Status = false;
+            Console.WriteLine($"Failed to updated product with id: {product.Id} - {e}");
+            return response;
+        }
+    }
+
+    
+    public async Task<ApiResponse<Product>>  CreateProduct(Product product)
+    {
+        ApiResponse<Product> response = new ApiResponse<Product>();
+        try
+        {
+            product.ProductNumber = AppHelpers.GenerateRandomNumber();
+            product.ExpirationDate = product.ExpirationDate.ToUniversalTime();
+            var savedProduct = await _productRepository.AddAsync(product);
+           
+            response.Data = savedProduct;
+            response.Message = "Product created successfully";
+            return response;
+        }
+        catch (Exception e)
+        {
+            response.Message = e.Message;
+            response.Status = false;
+            Console.WriteLine($"Failed to create product - {e}");
+            return response;
+        }
     }
 
     public async Task<List<Product>> GetMostPopularProducts()
@@ -113,63 +174,7 @@ public class ProductService
             return response;
         }
     }
-    
-    public async Task<ApiResponse<Product>> UpdateProduct(ProductDto dto, long productId)
-    {
-        ApiResponse<Product> response = new ApiResponse<Product>();
-        try
-        {
-            var product = await _productRepository.GetByIdAsync(productId);
-            if (product == null)
-            {
-                response.Message = "Product not found";
-                return response;
-            }
-            
-            product.Brand = dto.Brand;
-            product.Description = dto.Description;
-            product.Price = dto.Price;
-            product.ImageUrl = dto.Image;
-            product.Stock = dto.Quantity;
-            product.ExpirationDate = dto.ExpirationDate;
-            
-            var updatedProduct = await _productRepository.UpdateAsync(product);
-           
-            response.Data = updatedProduct;
-            response.Message = "Product updated successfully";
-            return response;
-        }
-        catch (Exception e)
-        {
-            response.Message = e.Message;
-            response.Status = false;
-            Console.WriteLine($"Failed to updated product with id: {productId} - {e}");
-            return response;
-        }
-    }
-    
-    public async Task<ApiResponse<Product>>  CreateProduct(Product product)
-    {
-        ApiResponse<Product> response = new ApiResponse<Product>();
-        try
-        {
-            product.ProductNumber = AppHelpers.GenerateRandomNumber();
-            product.ExpirationDate = product.ExpirationDate.ToUniversalTime();
-           //Product product = ProductMapper.MapToEntity(dto);
-           var savedProduct = await _productRepository.AddAsync(product);
-           
-            response.Data = savedProduct;
-            response.Message = "Product created successfully";
-            return response;
-        }
-        catch (Exception e)
-        {
-            response.Message = e.Message;
-            response.Status = false;
-            Console.WriteLine($"Failed to create product - {e}");
-            return response;
-        }
-    }
+   
   
     public async Task<ApiResponse<Product>>  DeleteProductById(long id)
     {
