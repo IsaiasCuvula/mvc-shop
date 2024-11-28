@@ -10,26 +10,67 @@
 </div>
 
 <div class="row">
-  
+
     @foreach (Product prod in Model)
     {
         <div class="col-md-4">
-            <form asp-controller="Product" method="post">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top fixed-image-height" src="@Url.Content("~/images/" + prod.ImageUrl)"
+                     alt="@prod.Description">
 
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top fixed-image-height" src="@Url.Content("~/images/" + prod.ImageUrl)"
-                         alt="@prod.Description">
+                <div class="card-body">
+                    <h5 class="card-title">@prod.Name</h5>
+                    <p class="card-text">@prod.Description</p>
+                    <p class="card-text">$@prod.Price</p>
+                    <p class="card-text"> Quantity in Stock: @prod.Stock</p>
+                    <a class="btn btn-info" asp-controller="Product" asp-action="AddEdit"
+                       asp-route-id="@prod.Id"><i class="bi bi-pencil-fill">Edit</i> </a>
 
-                    <div class="card-body">
-                        <h5 class="card-title">@prod.Name</h5>
-                        <p class="card-text">@prod.Description</p>
-                        <p class="card-text">$@prod.Price</p>
-                        <p class="card-text"> Quantity in Stock: @prod.Stock</p>
-                        <a class="btn btn-info" asp-controller="Product" asp-action="AddEdit"
-                           asp-route-id="@prod.Id"><i class="bi bi-pencil-fill">Edit</i> </a>
+                    <!-- Delete Button -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="@GetDeleteModalId(prod)">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="@GetModalId(prod)" data-bs-backdrop="static" data-bs-keyboard="false"
+                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Are you sure you want to delete @prod.Name?</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form asp-action="Delete" method="post" asp-controller="Product">
+                                    <div class="modal-body">
+                                        <p>This action cannot be undone.</p>
+                                        <!-- Hidden field to pass the product ID -->
+                                        <input type="hidden" name="id" value="@prod.Id" />
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     }
 </div>
+
+@functions
+{
+    string GetDeleteModalId(Product prod)
+    {
+        return "#deleteModal" + prod.Id;
+    }
+    
+    string GetModalId(Product prod)
+    {
+        //The same as GetDeleteModalId but without #
+        return "deleteModal" + prod.Id;
+    }
+}

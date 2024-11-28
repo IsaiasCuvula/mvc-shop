@@ -22,6 +22,24 @@ public class ProductController: Controller
         return View(await _productService.GetAllProducts());
     }
     
+    [HttpPost]
+    public async Task<IActionResult> Delete(long id)
+    {
+        try
+        {
+            await _productService.DeleteProductById(id);
+            return RedirectToAction("Index");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("****************************");
+            Console.WriteLine($"Error: {e.Message}");
+            Console.WriteLine("****************************");
+            
+            return RedirectToAction("Index");
+        }
+    } 
+    
     //When user click on submit form this method is called
     [HttpPost]
     public async Task<IActionResult> AddEdit(Product product)
@@ -145,9 +163,5 @@ public class ProductController: Controller
     //     return Ok(await _productService.GetProductById(id));
     // }
     //
-    // [HttpDelete("{id}")]
-    // public async Task<ActionResult<ApiResponse<Product>>> DeleteProductById(long id)
-    // {
-    //     return Ok(await _productService.DeleteProductById(id));
-    // }
+   
 }
