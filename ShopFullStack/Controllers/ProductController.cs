@@ -18,6 +18,28 @@ public class ProductController: Controller
         return View(await _productService.GetAllProducts());
     }
     
+    [HttpPost]
+    public async Task<IActionResult> AddEdit(ProductDto dto)
+    {
+        return Ok(await _productService.CreateProduct(dto));
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> AddEdit(int id)
+    {
+        ViewBag.Products = await _productService.GetAllProducts();
+    
+        if (id == 0)
+        {
+            ViewBag.Operation = "Add";
+            return View(new Product());
+        }else
+        {
+            ApiResponse<Product> response = await _productService.GetProductById(id);
+            ViewBag.Operation = "Edit";
+            return View(response.Data);
+        }
+    }
     // [HttpGet]
     // public async Task<ActionResult<ApiResponse<List<Product>>>> GetAllProducts()
     // {

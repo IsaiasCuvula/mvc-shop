@@ -4,11 +4,10 @@
     ViewData["Title"] = "All Products";
 }
 
-<h2>All Products</h2>
-
-<p>
-    <a asp-controller="Product" class="btn btn-primary mb-3">Add New Product</a>
-</p>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>All Products</h2>
+    <a asp-controller="Product" asp-action="AddEdit" class="btn btn-primary">Add New Product</a>
+</div>
 
 <div class="row">
   

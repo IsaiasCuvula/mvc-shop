@@ -7,14 +7,16 @@ namespace ShopFullStack.Models;
 [Table("products")]
 public class Product
 {
+    public Product() {}
+
     [Column("id")]
     public long Id { get; set; }
     [Column("name"), MaxLength(254)] 
-    public required string Name { get; set; }
+    public string Name { get; set; } = String.Empty;
     [Column("brand"), MaxLength(254)]
-    public required string Brand { get; set; }
+    public string Brand { get; set; } = String.Empty;
     [Column("description"), MaxLength(508)]
-    public required string Description { get; set; }
+    public string Description { get; set; }  = String.Empty;
     [Column("price")]
     public decimal Price { get; set; }
     [Column("expiration_date")]
