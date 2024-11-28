@@ -44,42 +44,12 @@
         <span asp-validation-for="ExpirationDate" class="text-danger"></span>
     </div>
 
-
     <div class="form-group mb-2">
         <label asp-for="ImageFile">Upload Image</label>
         <input asp-for="ImageFile" class="form-control" type="file" id="ImageFile" name="ImageFile"/>
         <span asp-validation-for="ImageFile" class="text-danger"></span>
     </div>
     
-    @* <div class="row"> *@
-    @*     <div class="col"> *@
-    @*         <label asp-for="Category">Choose Category</label> *@
-    @*         @foreach (Category category in ViewBag.Categories) *@
-    @*         { *@
-    @*             <div class="form-check"> *@
-    @*                 @{ *@
-    @*                     bool isChecked = Model.CategoryId == category.CategoryId; *@
-    @*                 } *@
-    @*                 <input type="radio" class="form-check-input" name="categoryId" value="@category.CategoryId" *@
-    @*                        id="@category.CategoryId" @(isChecked ? "checked" : "")/> @category.Name *@
-    @*             </div> *@
-    @*         } *@
-    @*     </div> *@
-    @*     <div class="col"> *@
-    @*         <label asp-for="ProductIngredients">Choose Ingredients</label> *@
-    @*         @foreach (Ingredient ingredient in ViewBag.Ingredients) *@
-    @*         { *@
-    @*             <div class="form-check"> *@
-    @*                 @{ *@
-    @*                     bool isChecked = Model.ProductIngredients != null && Model.ProductIngredients.Any( *@
-    @*                         i => i.IngredientId == ingredient.IngredientId); *@
-    @*                 } *@
-    @*                 <input type="checkbox" class="form-check-input" name="ingredientIds" value="@ingredient.IngredientId" *@
-    @*                        id="@ingredient.IngredientId" @(isChecked ? "checked" : "")/> @ingredient.Name *@
-    @*             </div> *@
-    @*         } *@
-    @*     </div> *@
-    @* </div> *@
     <div class="mb-3"></div>
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Index" asp-controller="Product" class="btn btn-outline-dark">Cancel</a>
