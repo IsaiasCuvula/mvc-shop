@@ -1,5 +1,4 @@
 using Moq;
-using ShopFullStack.Dtos;
 using ShopFullStack.Models;
 using ShopFullStack.Repositories.Orders;
 using ShopFullStack.Repositories.Product;
@@ -45,15 +44,6 @@ public class ProductServiceTest
             ProductNumber = 100005,
             ImageUrl = "fertilizer.jpg"
         };
-        var dto =new ProductDto(
-              "Fertilizer",
-            "Green Thumb",
-            "Organic Fertilizer (5lb Bag)",
-            14.99m,
-            dateTime,
-            75,
-            "fertilizer.jpg"
-        );
         
         //Arrange
         _productRepository.Setup(
@@ -61,7 +51,7 @@ public class ProductServiceTest
         ).ReturnsAsync(expectedProduct);
 
         // Act
-        var result = await _productService.CreateProduct(dto);
+        var result = await _productService.CreateProduct(expectedProduct);
 
         // Assert
         Assert.NotNull(result);

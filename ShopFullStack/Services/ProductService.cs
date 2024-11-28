@@ -3,6 +3,7 @@ using ShopFullStack.Mappers;
 using ShopFullStack.Models;
 using ShopFullStack.Repositories.Orders;
 using ShopFullStack.Repositories.Product;
+using ShopFullStack.Utilities;
 
 namespace ShopFullStack.Services;
 
@@ -147,12 +148,14 @@ public class ProductService
         }
     }
     
-    public async Task<ApiResponse<Product>>  CreateProduct(ProductDto dto)
+    public async Task<ApiResponse<Product>>  CreateProduct(Product product)
     {
         ApiResponse<Product> response = new ApiResponse<Product>();
         try
         {
-           Product product = ProductMapper.MapToEntity(dto);
+            product.ProductNumber = AppHelpers.GenerateRandomNumber();
+            product.ExpirationDate = product.ExpirationDate.ToUniversalTime();
+           //Product product = ProductMapper.MapToEntity(dto);
            var savedProduct = await _productRepository.AddAsync(product);
            
             response.Data = savedProduct;

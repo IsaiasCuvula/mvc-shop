@@ -7,10 +7,15 @@ namespace ShopFullStack.Controllers;
 public class ProductController: Controller
 {
     private readonly ProductService _productService;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public ProductController(ProductService productService)
+    public ProductController(
+        ProductService productService,
+        IWebHostEnvironment webHostEnvironment
+    )
     {
         _productService = productService;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     public async Task<IActionResult> Index()
@@ -18,12 +23,53 @@ public class ProductController: Controller
         return View(await _productService.GetAllProducts());
     }
     
+    //When user click on submit form this method is called
     [HttpPost]
-    public async Task<IActionResult> AddEdit(ProductDto dto)
+    public async Task<IActionResult> AddEdit(Product product)
     {
-        return Ok(await _productService.CreateProduct(dto));
+        ViewBag.Products = await _productService.GetAllProducts();
+        
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("****************************");
+                Console.WriteLine(
+                    $"Error: {ModelState.Values.SelectMany(v => v.Errors).FirstOrDefault()?.ErrorMessage}"
+                );
+                Console.WriteLine("****************************");
+                return View(new Product());
+            }
+            
+            //Add product 
+            if (product.Id == 0)
+            {
+                if (product.ImageFile != null)
+                {
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + product.ImageFile.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await product.ImageFile.CopyToAsync(fileStream);
+                    }
+                    product.ImageUrl = uniqueFileName;
+                }
+                await _productService.CreateProduct(product);
+            }
+            return RedirectToAction("Index", "Product");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("****************************");
+            Console.WriteLine($"Error: {e.Message}");
+            Console.WriteLine("****************************");
+            return View(new Product());
+        }
     }
     
+    //When user click on add new product on all product page 
+    //this method is called
     [HttpGet]
     public async Task<IActionResult> AddEdit(int id)
     {
