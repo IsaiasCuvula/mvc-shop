@@ -42,6 +42,7 @@ public class ProductController: Controller
     
     //When user click on submit form this method is called
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddEdit(Product product)
     {
         ViewBag.Products = await _productService.GetAllProducts();
