@@ -1,14 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ShopFullStack.Models;
 
 [Table("customers")]
-public class Customer
+public class Customer: IdentityUser
 {   
     [Column("id")]
-    public long Id { get; set; } 
+    public new long  Id { get; set; } 
+    
     [Column("name"),MaxLength(100)]
     public required string Name { get; set; } 
     [Column("id_card_number")]
