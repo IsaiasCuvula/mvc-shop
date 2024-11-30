@@ -18,6 +18,38 @@ public class CustomerController: Controller
         _customerService = customerService;
     }
     
+    
+    [HttpGet]
+    public async Task<IActionResult> UpdateCustomer()
+    {  
+        var user = _userManager.GetUserAsync(User).Result;
+        var email = HttpContext.Session.GetString("Email");
+        var appUserId = HttpContext.Session.GetString("AppUserId");
+        ViewData["Email"] = user == null? email : user.Email;
+        ViewData["AppUserId"] = user == null? appUserId: user.Id;
+        var result = await _customerService
+            .GetCustomerByAppUserId(appUserId);
+        return View(result.Data);
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateCustomer(Customer customer)
+    {
+        Console.WriteLine($"Saving customer: {customer.Name}, {customer.AppUserId} {customer.Email}, {customer.Phone}");
+        
+        if (!ModelState.IsValid)
+        {
+            Console.WriteLine(string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+            return View(customer);
+        }
+        else
+        {
+            await _customerService.UpdateCustomer(customer);
+            return View(customer);
+        }
+    }
+    
     [HttpGet]
     public IActionResult CompleteProfile()
     {  
@@ -25,37 +57,9 @@ public class CustomerController: Controller
        var email = HttpContext.Session.GetString("Email");
        var appUserId = HttpContext.Session.GetString("AppUserId");
 
-        if (user != null)
-        {
-            ViewData["Email"] = user.Email;
-            ViewData["AppUserId"] = user.Id;
-        }
-        else
-        {
-            ViewData["Email"] = email;
-            ViewData["AppUserId"] = appUserId;
-        }
-        return View();
-    }
-    
-    [HttpGet]
-    public IActionResult UpdateCustomer()
-    {  
-       var user = _userManager.GetUserAsync(User).Result;
-       var email = HttpContext.Session.GetString("Email");
-       var appUserId = HttpContext.Session.GetString("AppUserId");
-
-        if (user != null)
-        {
-            ViewData["Email"] = user.Email;
-            ViewData["AppUserId"] = user.Id;
-        }
-        else
-        {
-            ViewData["Email"] = email;
-            ViewData["AppUserId"] = appUserId;
-        }
-        return View();
+       ViewData["Email"] = user == null? email : user.Email;
+       ViewData["AppUserId"] = user == null? appUserId: user.Id;
+       return View();
     }
 
     [HttpPost]

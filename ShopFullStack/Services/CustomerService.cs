@@ -1,5 +1,3 @@
-using ShopFullStack.Dtos;
-using ShopFullStack.Mappers;
 using ShopFullStack.Models;
 using ShopFullStack.Repositories;
 using ShopFullStack.Repositories.Orders;
@@ -19,6 +17,30 @@ public class CustomerService
     {
         _customerRepository = customerRepository;
         _orderRepository = orderRepository;
+    }
+    
+    public async Task<ApiResponse<Customer>> GetCustomerByAppUserId(string appUserId)
+    {
+        ApiResponse<Customer> response = new ApiResponse<Customer>();
+        try
+        {
+            var customer = await _customerRepository.GetCustomerByAppUserId(appUserId);
+            if (customer == null)
+            {
+                response.Message = "Customer not found";
+                return response;
+            }
+            response.Data = customer;
+            response.Message = "Customer successfully retrieved";
+            return response;
+        }
+        catch (Exception e)
+        {
+            response.Message = e.Message;
+            response.Status = false;
+            Console.WriteLine($"Failed to get customer with id: {appUserId} - {e}");
+            return response;
+        }
     }
     
     public async Task<ApiResponse<Customer>> GetTopCustomerByTurnover()
@@ -89,12 +111,12 @@ public class CustomerService
         }
     }
     
-    public async Task<ApiResponse<Customer>> UpdateCustomer(Customer customer, long customerId)
+    public async Task<ApiResponse<Customer>> UpdateCustomer(Customer customer)
     {
         ApiResponse<Customer> response = new ApiResponse<Customer>();
         try
         {
-            var oldCustomer = await _customerRepository.GetByIdAsync(customerId);
+            var oldCustomer = await _customerRepository.GetByIdAsync(customer.Id);
             if (oldCustomer == null)
             {
                 response.Message = "Customer not found";
@@ -119,7 +141,7 @@ public class CustomerService
         {
             response.Message = e.Message;
             response.Status = false;
-            Console.WriteLine($"Failed to updated customer with id: {customerId} - {e}");
+            Console.WriteLine($"Failed to updated customer with id: {customer.Id} - {e}");
             return response;
         }
     }
