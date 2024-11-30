@@ -1,15 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace ShopFullStack.Models;
 
 [Table("customers")]
-public class Customer: IdentityUser
+public class Customer
 {   
     [Column("id")]
-    public new long  Id { get; set; } 
+    public long  Id { get; set; } 
     
     [Column("name"),MaxLength(100)]
     public required string Name { get; set; } 
@@ -28,4 +28,9 @@ public class Customer: IdentityUser
  
     [Column("orders_id"), JsonIgnore]
     public ICollection<Order> Orders { get; set; }
+    
+    [ForeignKey("app_user")]
+    public string AppUserId { get; set; }
+    [ValidateNever, Column("user_id")] 
+    public AppUser? AppUser { get; set; }
 }
