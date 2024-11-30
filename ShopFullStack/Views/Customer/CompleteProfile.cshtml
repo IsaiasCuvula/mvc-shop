@@ -17,35 +17,44 @@
             <!-- Full Name -->
             <div class="form-group mb-2">
                 <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control" type="text" id="Name" name="Name"/>
+                <input asp-for="Name" class="form-control" type="text" id="Name" name="Name" 
+                       placeholder="Ivan Ivanov" required="required"/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             
             <!-- ID Card Number -->
             <div class="form-group mb-2">
                 <label asp-for="IdCardNumber">Id card number</label>
-                <input asp-for="IdCardNumber" class="form-control" type="number" id="IdCardNumber" name="IdCardNumber"/>
+                <input asp-for="IdCardNumber" class="form-control" 
+                       type="number" id="IdCardNumber" name="IdCardNumber"
+                       placeholder="1234567890" required="required"/>
                 <span asp-validation-for="IdCardNumber" class="text-danger"></span>
             </div>
 
             <!-- City -->
             <div class="form-group mb-2">
                 <label asp-for="City"></label>
-                <input asp-for="City" class="form-control" type="text" id="City" name="City"/>
+                <input asp-for="City" class="form-control" 
+                       type="text" id="City" name="City"
+                placeholder="Varna" required="required"/>
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
 
             <!-- Address -->
             <div class="form-group mb-2">
                 <label asp-for="Address"></label>
-                <input asp-for="Address" class="form-control" type="text" id="Address" name="Address"/>
+                <input asp-for="Address" class="form-control"
+                       type="text" id="Address" name="Address"
+                       placeholder="ul. Ivan Vasov 87" required="required"/>
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
 
             <!-- Phone Number -->
             <div class="form-group mb-2">
                 <label asp-for="Phone"></label>
-                <input asp-for="Phone" class="form-control" type="tel" id="Phone" name="Phone"/>
+                <input asp-for="Phone" class="form-control" 
+                       type="tel" id="Phone" name="Phone"
+                       placeholder="+359 88 8887878" required="required"/>
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
       
