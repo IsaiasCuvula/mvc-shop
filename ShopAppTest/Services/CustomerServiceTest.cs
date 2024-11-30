@@ -43,14 +43,6 @@ public class CustomerServiceTest
             Email = "johndoe@example.com",
             CustomerNumber = 987654321,
         };
-        var dto =new CustomerDto(
-            "John Doe",
-             123456789,
-            "New York",
-             "New York",
-             "+1-555-1234",
-             "johndoe@example.com"
-            );
         
         //Arrange
         _customerRepository.Setup(
@@ -58,7 +50,7 @@ public class CustomerServiceTest
         ).ReturnsAsync(expectedCustomer);
 
         // Act
-        var result = await _customerService.CreateCustomer(dto);
+        var result = await _customerService.CreateCustomer(expectedCustomer);
 
         // Assert
         Assert.NotNull(result);

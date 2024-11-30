@@ -3,6 +3,7 @@ using ShopFullStack.Mappers;
 using ShopFullStack.Models;
 using ShopFullStack.Repositories;
 using ShopFullStack.Repositories.Orders;
+using ShopFullStack.Utilities;
 
 namespace ShopFullStack.Services;
 
@@ -88,27 +89,27 @@ public class CustomerService
         }
     }
     
-    public async Task<ApiResponse<Customer>> UpdateCustomer(CustomerDto dto, long customerId)
+    public async Task<ApiResponse<Customer>> UpdateCustomer(Customer customer, long customerId)
     {
         ApiResponse<Customer> response = new ApiResponse<Customer>();
         try
         {
-            var customer = await _customerRepository.GetByIdAsync(customerId);
-            if (customer == null)
+            var oldCustomer = await _customerRepository.GetByIdAsync(customerId);
+            if (oldCustomer == null)
             {
                 response.Message = "Customer not found";
                 return response;
             }
             
-            customer.Name = dto.Name;
-            customer.Email = dto.Email;
-            customer.Phone = dto.Phone;
-            customer.Address = dto.Address;
-            customer.City = dto.City;
-            customer.IdCardNumber = dto.IdCardNumber;
+            oldCustomer.Name = customer.Name;
+            oldCustomer.Email = customer.Email;
+            oldCustomer.Phone = customer.Phone;
+            oldCustomer.Address = customer.Address;
+            oldCustomer.City = customer.City;
+            oldCustomer.IdCardNumber = customer.IdCardNumber;
             
             
-            var updatedCustomer = await _customerRepository.UpdateAsync(customer);
+            var updatedCustomer = await _customerRepository.UpdateAsync(oldCustomer);
            
             response.Data = updatedCustomer;
             response.Message = "Customer updated successfully";
@@ -123,14 +124,13 @@ public class CustomerService
         }
     }
     
-    public async Task<ApiResponse<Customer>>  CreateCustomer(CustomerDto dto)
+    public async Task<ApiResponse<Customer>>  CreateCustomer(Customer customer)
     {
         ApiResponse<Customer> response = new ApiResponse<Customer>();
         try
         {
-            Customer customer = CustomerMapper.MapToEntity(dto);
-           
-           var savedCustomer = await _customerRepository.AddAsync(customer);
+            customer.CustomerNumber = AppHelpers.GenerateRandomNumber();
+            var savedCustomer = await _customerRepository.AddAsync(customer);
            
             response.Data = savedCustomer;
             response.Message = "Customer created successfully";
