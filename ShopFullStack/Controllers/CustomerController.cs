@@ -37,6 +37,26 @@ public class CustomerController: Controller
         }
         return View();
     }
+    
+    [HttpGet]
+    public IActionResult UpdateCustomer()
+    {  
+       var user = _userManager.GetUserAsync(User).Result;
+       var email = HttpContext.Session.GetString("Email");
+       var appUserId = HttpContext.Session.GetString("AppUserId");
+
+        if (user != null)
+        {
+            ViewData["Email"] = user.Email;
+            ViewData["AppUserId"] = user.Id;
+        }
+        else
+        {
+            ViewData["Email"] = email;
+            ViewData["AppUserId"] = appUserId;
+        }
+        return View();
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
