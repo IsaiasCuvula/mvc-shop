@@ -83,5 +83,51 @@
                     Save Profile </button>
             </div>
         </form>
+        <div class="mt-5">
+            <!-- Delete Button -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="@GetDeleteModalId(Model.Id)">
+                <i class="bi bi-trash-fill"></i>
+            </button>
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="@GetModalId(Model.Id)" data-bs-backdrop="static" data-bs-keyboard="false"
+             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Are you sure you want to delete your account?</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form asp-action="Delete" method="post" asp-controller="Customer">
+                      <div class="modal-body">
+                          <p>This action cannot be undone.</p>
+                          <!-- Hidden field to pass the product ID -->
+                          <input type="hidden" name="id" value="@Model.Id" />
+                      </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@functions
+{
+    string GetDeleteModalId(long userId)
+    {
+        return "#deleteModal" + userId;
+    }
+
+    string GetModalId(long userId)
+    {
+        //The same as GetDeleteModalId but without #
+        return "deleteModal" + userId;
+    }
+}
+

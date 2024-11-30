@@ -10,13 +10,46 @@ public class CustomerController: Controller
     
     private readonly CustomerService _customerService;
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
 
     public CustomerController(CustomerService customerService, 
-        UserManager<IdentityUser> userManager)
+        UserManager<IdentityUser> userManager,  SignInManager<IdentityUser> signInManager)
     {
+        _signInManager = signInManager;
         _userManager = userManager;
         _customerService = customerService;
     }
+    
+    //Delete
+    [HttpPost]
+    public async Task<IActionResult> Delete(long id)
+    {
+        try
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            
+            await _customerService.DeleteCustomerById(id);
+            await _userManager.DeleteAsync(user);
+            
+            // Log out the user
+            await _signInManager.SignOutAsync();
+            
+            return RedirectToAction("Index", "Home");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("****************************");
+            Console.WriteLine($"Error: {e.Message}");
+            Console.WriteLine("****************************");
+            
+            return RedirectToAction("Index", "Home");
+        }
+    } 
     
     
     [HttpGet]
