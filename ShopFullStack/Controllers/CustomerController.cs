@@ -23,37 +23,51 @@ public class CustomerController: Controller
     public async Task<IActionResult> UpdateCustomer()
     {  
         var user = _userManager.GetUserAsync(User).Result;
-        var email = HttpContext.Session.GetString("Email");
-        var appUserId = HttpContext.Session.GetString("AppUserId");
-        ViewData["Email"] = user == null? email : user.Email;
-        ViewData["AppUserId"] = user == null? appUserId: user.Id;
+        var email = user == null?  HttpContext.Session.GetString("Email"): user.Email;
+        var appUserId = user == null? HttpContext.Session.GetString("AppUserId") : user.Id;
+        ViewData["Email"] = email;
+        ViewData["AppUserId"] = appUserId;
         var result = await _customerService
-            .GetCustomerByAppUserId(appUserId);
+            .GetCustomerByEmail(email);
+       
+        Console.WriteLine($"customer: {result.Data}, {result.Message}");
+        Console.WriteLine($"customer: {result.Data}, {result.Message}");
+
         return View(result.Data);
     }
     
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateCustomer(Customer customer)
     {
-        Console.WriteLine($"Saving customer: {customer.Name}, {customer.AppUserId} {customer.Email}, {customer.Phone}");
+        Console.WriteLine($"customer: {customer}");
         
+        var user = _userManager.GetUserAsync(User).Result;
+        var email = user == null?  HttpContext.Session.GetString("Email"): user.Email;
+        var appUserId = user == null? HttpContext.Session.GetString("AppUserId") : user.Id;
+        ViewData["Email"] = email;
+        ViewData["AppUserId"] = appUserId;
+
         if (!ModelState.IsValid)
         {
-            Console.WriteLine(string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+            Console.WriteLine(
+                string.Join(", ", 
+                    ModelState.Values.SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                )
+            );
             return View(customer);
         }
         else
         {
-            await _customerService.UpdateCustomer(customer);
-            return View(customer);
+            var response = await _customerService.UpdateCustomer(customer);
+            return View(response.Data);
         }
     }
     
     [HttpGet]
     public IActionResult CompleteProfile()
     {  
-        var user = _userManager.GetUserAsync(User).Result;
+       var user = _userManager.GetUserAsync(User).Result;
        var email = HttpContext.Session.GetString("Email");
        var appUserId = HttpContext.Session.GetString("AppUserId");
 

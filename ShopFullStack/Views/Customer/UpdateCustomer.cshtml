@@ -6,7 +6,7 @@
 
 <div class="d-flex justify-content-center">
     <div class="col-md-6">
-        <form id="completeProfileForm" asp-action="UpdateCustomer" method="post">
+        <form asp-controller="Customer" id="UpdateCustomer" asp-action="UpdateCustomer" method="post">
             <div class="text-center">
                 <h2>Manage your account</h2>
                 <p>Change your account settings</p>
@@ -62,7 +62,9 @@
             <input type="hidden" asp-for="AppUserId" id="AppUserId" name="AppUserId" value="@ViewData["AppUserId"]" />
 
             <div class="mt-5">
-                <button id="completeProfileSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Save Profile</button>
+                <button id="UpdateCustomerSubmit"
+                    type="submit" class="w-100 btn btn-lg btn-primary">
+                    Save Profile </button>
             </div>
         </form>
     </div>
