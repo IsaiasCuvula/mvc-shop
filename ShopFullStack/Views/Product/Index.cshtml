@@ -15,8 +15,10 @@
     {
         <div class="col-md-4 mb-3">
             <div class="card" style="width: 18rem;">
-                <img class="card-img-top fixed-image-height" src="@Url.Content("~/images/" + prod.ImageUrl)"
-                     alt="@prod.Description">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@prod.Id">
+                    <img class="card-img-top fixed-image-height" src="@Url.Content("~/images/" + prod.ImageUrl)"
+                         alt="@prod.Description">
+                </a>
 
                 <div class="card-body">
                     <h5 class="card-title">@prod.Name</h5>

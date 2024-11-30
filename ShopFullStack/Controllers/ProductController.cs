@@ -22,6 +22,16 @@ public class ProductController: Controller
         return View(await _productService.GetAllProducts());
     }
     
+    [HttpGet]
+    public async Task<IActionResult> Details(long id)
+    {
+        ViewBag.Products = await _productService.GetAllProducts();
+       
+        var response = await _productService.GetProductById(id);
+        ViewBag.Operation = "Edit";
+        return View(response.Data);
+    }
+    
     [HttpPost]
     public async Task<IActionResult> Delete(long id)
     {

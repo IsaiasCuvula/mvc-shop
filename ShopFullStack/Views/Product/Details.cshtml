@@ -1,0 +1,76 @@
+@model Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Url.Content("~/images/" + Model.ImageUrl)" class="img-fluid rounded" alt="@Model.Name" />
+        </div>
+
+        <div class="col-md-6">
+            <h1>@Model.Name</h1>
+            <h4 class="text-muted">@Model.Brand</h4>
+            <p class="text-muted">Product #@Model.ProductNumber</p>
+            <p>@Model.Description</p>
+            <h3>$@Model.Price</h3>
+
+            @if (Model.Stock > 0)
+            {
+                <p class="text-success">In Stock: @Model.Stock</p>
+            }
+            else
+            {
+                <p class="text-danger">Out of Stock</p>
+            }
+
+            <p class="text-muted">Expires on: @Model.ExpirationDate.ToString("MMMM dd, yyyy")</p>
+
+            <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                <input type="hidden" name="productId" value="@Model.Id" />
+
+                <div class="input-group mb-3">
+                    <button type="button" class="btn btn-outline-secondary" id="decreaseQty">-</button>
+                    <input type="number" name="quantity" id="quantity" class="form-control text-center" value="1" min="1" max="@Model.Stock" />
+                    <button type="button" class="btn btn-outline-secondary" id="increaseQty">+</button>
+                </div>
+
+                @if (Model.Stock > 0)
+                {
+                    <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary w-100" disabled>Out of Stock</button>
+                }
+            </form>
+
+            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary mt-3">Back to Products</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Increase/Decrease Quantity
+        const decreaseQtyBtn = document.getElementById('decreaseQty');
+        const increaseQtyBtn = document.getElementById('increaseQty');
+        const quantityInput = document.getElementById('quantity');
+
+        decreaseQtyBtn.addEventListener('click', () => {
+            const currentQty = parseInt(quantityInput.value);
+            if (currentQty > 1) {
+                quantityInput.value = currentQty - 1;
+            }
+        });
+
+        increaseQtyBtn.addEventListener('click', () => {
+            const currentQty = parseInt(quantityInput.value);
+            if (currentQty < parseInt(quantityInput.max)) {
+                quantityInput.value = currentQty + 1;
+            }
+        });
+    </script>
+}
