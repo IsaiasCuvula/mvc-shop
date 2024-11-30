@@ -29,9 +29,25 @@ public class CustomerController: Controller
         ViewData["AppUserId"] = appUserId;
         var result = await _customerService
             .GetCustomerByEmail(email);
-       
-        Console.WriteLine($"customer: {result.Data}, {result.Message}");
-        Console.WriteLine($"customer: {result.Data}, {result.Message}");
+        Console.WriteLine("*************************************************************");
+        Console.WriteLine($"Update customer get method Data: {result.Data}");
+        Console.WriteLine($"Update customer get method Message: {result.Message}");
+        Console.WriteLine("*************************************************************");
+
+        if (result.Data == null)
+        {
+            var customerToBeCreated = new Customer
+            {
+                Email = email,
+                AppUserId = appUserId,
+                Id = 0,
+                Name =  string.Empty,
+                City = string.Empty,
+                Address = string.Empty,
+                Phone = string.Empty,
+            };
+            return View(customerToBeCreated);
+        }
 
         return View(result.Data);
     }
@@ -64,7 +80,18 @@ public class CustomerController: Controller
         }
         else
         {
-            var response = await _customerService.UpdateCustomer(customer);
+            ApiResponse<Customer> response = new ApiResponse<Customer>();
+            //If user does not have all info, create a customer
+            if (customer.Id == 0)
+            {
+                response = await _customerService.CreateCustomer(customer);
+            }
+            else
+            {
+                //Update
+                response = await _customerService.UpdateCustomer(customer);
+            }
+            
             Console.WriteLine("*******************************");
             Console.WriteLine($"Message: {response.Message}");
             Console.WriteLine($"Data: {response.Data}");
