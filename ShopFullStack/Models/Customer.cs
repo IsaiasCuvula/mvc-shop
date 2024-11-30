@@ -44,11 +44,9 @@ public class Customer
     [Column("customer_number")]
     public long CustomerNumber { get; set; }
  
-    [Column("orders_id"), JsonIgnore]
+    [ValidateNever, Column("orders_id"), JsonIgnore]
     public ICollection<Order> Orders { get; set; }
     
     [Column("user_id")]
     public string AppUserId { get; set; }
-    [ValidateNever, Column("app_user")] 
-    public AppUser? AppUser { get; set; }
 }
