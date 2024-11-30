@@ -52,6 +52,8 @@ namespace ShopFullStack.Areas.Identity.Pages.Account
             
             if (result.Succeeded)
             {
+                HttpContext.Session.SetString("AppUserId", user.Id);
+                HttpContext.Session.SetString("Email", user.Email);
                 await _signInManager.SignInAsync(user, isPersistent: false);
             }
             return Page();
