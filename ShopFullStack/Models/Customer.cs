@@ -29,8 +29,8 @@ public class Customer
     [Column("orders_id"), JsonIgnore]
     public ICollection<Order> Orders { get; set; }
     
-    [ForeignKey("app_user")]
+    [Column("user_id")]
     public string AppUserId { get; set; }
-    [ValidateNever, Column("user_id")] 
+    [ValidateNever, Column("app_user")] 
     public AppUser? AppUser { get; set; }
 }

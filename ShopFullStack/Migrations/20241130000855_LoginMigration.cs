@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ShopFullStack.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateOtherTables : Migration
+    public partial class LoginMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,6 +31,7 @@ namespace ShopFullStack.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    Discriminator = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -49,25 +50,6 @@ namespace ShopFullStack.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "customers",
-                columns: table => new
-                {
-                    id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    id_card_number = table.Column<long>(type: "bigint", nullable: false),
-                    city = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
-                    address = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
-                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    email = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
-                    customer_number = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_customers", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -197,6 +179,32 @@ namespace ShopFullStack.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "customers",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    id_card_number = table.Column<long>(type: "bigint", nullable: false),
+                    city = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
+                    address = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
+                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    email = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
+                    customer_number = table.Column<long>(type: "bigint", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_customers", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_customers_AspNetUsers_user_id",
+                        column: x => x.user_id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "orders",
                 columns: table => new
                 {
@@ -267,6 +275,11 @@ namespace ShopFullStack.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_customers_user_id",
+                table: "customers",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_orders_CustomerId",
                 table: "orders",
                 column: "CustomerId");
@@ -302,13 +315,13 @@ namespace ShopFullStack.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "customers");
 
             migrationBuilder.DropTable(
                 name: "products");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }
