@@ -21,7 +21,7 @@ public class CustomerController: Controller
     
     [HttpGet]
     public async Task<IActionResult> UpdateCustomer()
-    {  
+    {   
         var user = _userManager.GetUserAsync(User).Result;
         var email = user == null?  HttpContext.Session.GetString("Email"): user.Email;
         var appUserId = user == null? HttpContext.Session.GetString("AppUserId") : user.Id;
@@ -37,9 +37,14 @@ public class CustomerController: Controller
     }
     
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateCustomer(Customer customer)
     {
-        Console.WriteLine($"customer: {customer}");
+        Console.WriteLine("*******************************");
+        Console.WriteLine($"Customer Id: {customer.Id}");
+        Console.WriteLine($"Customer email: {customer.Email}");
+        Console.WriteLine($"AppUserId: {customer.AppUserId}");
+        Console.WriteLine("*******************************");
         
         var user = _userManager.GetUserAsync(User).Result;
         var email = user == null?  HttpContext.Session.GetString("Email"): user.Email;
@@ -55,11 +60,15 @@ public class CustomerController: Controller
                         .Select(e => e.ErrorMessage)
                 )
             );
-            return View(customer);
+            return View();
         }
         else
         {
             var response = await _customerService.UpdateCustomer(customer);
+            Console.WriteLine("*******************************");
+            Console.WriteLine($"Message: {response.Message}");
+            Console.WriteLine($"Data: {response.Data}");
+            Console.WriteLine("*******************************");
             return View(response.Data);
         }
     }
