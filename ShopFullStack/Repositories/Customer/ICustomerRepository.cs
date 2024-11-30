@@ -4,7 +4,7 @@ namespace ShopFullStack.Repositories;
 
 public interface ICustomerRepository
 {
-    Task<Customer?> GetCustomerByAppUserId(string appUserId);
+    Task<Customer?> GetCustomerByEmail(string email);
     Task<Customer?> GetByIdAsync(long id);
     Task<List<Customer>> GetAllAsync();
     Task<Customer> AddAsync(Customer customer);

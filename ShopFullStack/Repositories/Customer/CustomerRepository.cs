@@ -13,7 +13,6 @@ public class CustomerRepository: ICustomerRepository
     {
         _context = context;
     }
-   
 
     public async Task<List<Customer>> GetAllCustomerShoppedLasWeekAsync()
     {
@@ -37,9 +36,9 @@ public class CustomerRepository: ICustomerRepository
             .FirstOrDefaultAsync(c=> c.CustomerNumber == customerNumber);
     }
 
-    public async Task<Customer?> GetCustomerByAppUserId(string appUserId)
+    public async Task<Customer?> GetCustomerByEmail(string email)
     {
-        return await _context.Customers.FirstOrDefaultAsync(c=> c.AppUserId == appUserId);
+        return await _context.Customers.FirstOrDefaultAsync(c=> c.Email == email);
     }
 
     public async Task<Customer?> GetByIdAsync(long id)

@@ -19,12 +19,53 @@ public class CustomerService
         _orderRepository = orderRepository;
     }
     
-    public async Task<ApiResponse<Customer>> GetCustomerByAppUserId(string appUserId)
+    public async Task<ApiResponse<Customer>> UpdateCustomer(Customer customer)
     {
         ApiResponse<Customer> response = new ApiResponse<Customer>();
         try
         {
-            var customer = await _customerRepository.GetCustomerByAppUserId(appUserId);
+            var oldCustomer = await _customerRepository.GetByIdAsync(customer.Id);
+            if (oldCustomer == null)
+            {
+                response.Message = "Customer not found";
+                return response;
+            }
+            
+            oldCustomer.Name = customer.Name;
+            oldCustomer.Email = customer.Email;
+            oldCustomer.Phone = customer.Phone;
+            oldCustomer.Address = customer.Address;
+            oldCustomer.City = customer.City;
+            oldCustomer.IdCardNumber = customer.IdCardNumber;
+            
+            var updatedCustomer = await _customerRepository.UpdateAsync(oldCustomer);
+           
+            response.Data = updatedCustomer;
+            response.Message = "Customer updated successfully";
+            return response;
+        }
+        catch (Exception e)
+        {
+            response.Message = e.Message;
+            response.Status = false;
+            Console.WriteLine($"Failed to updated customer with id: {customer.Id} - {e}");
+            return response;
+        }
+    }
+    
+    public async Task<ApiResponse<Customer>> GetCustomerByEmail(string? email)
+    {
+        ApiResponse<Customer> response = new ApiResponse<Customer>();
+        try
+        {
+            if (email == null)
+            {
+                response.Data = null;
+                response.Message = "Customer not found";
+                return response;
+            }
+            
+            var customer = await _customerRepository.GetCustomerByEmail(email);
             if (customer == null)
             {
                 response.Message = "Customer not found";
@@ -38,7 +79,7 @@ public class CustomerService
         {
             response.Message = e.Message;
             response.Status = false;
-            Console.WriteLine($"Failed to get customer with id: {appUserId} - {e}");
+            Console.WriteLine($"Failed to get customer with email: {email} - {e}");
             return response;
         }
     }
@@ -107,41 +148,6 @@ public class CustomerService
             response.Message = e.Message;
             response.Status = false;
             Console.WriteLine($"Failed to get all customers who shopped last week: {e}");
-            return response;
-        }
-    }
-    
-    public async Task<ApiResponse<Customer>> UpdateCustomer(Customer customer)
-    {
-        ApiResponse<Customer> response = new ApiResponse<Customer>();
-        try
-        {
-            var oldCustomer = await _customerRepository.GetByIdAsync(customer.Id);
-            if (oldCustomer == null)
-            {
-                response.Message = "Customer not found";
-                return response;
-            }
-            
-            oldCustomer.Name = customer.Name;
-            oldCustomer.Email = customer.Email;
-            oldCustomer.Phone = customer.Phone;
-            oldCustomer.Address = customer.Address;
-            oldCustomer.City = customer.City;
-            oldCustomer.IdCardNumber = customer.IdCardNumber;
-            
-            
-            var updatedCustomer = await _customerRepository.UpdateAsync(oldCustomer);
-           
-            response.Data = updatedCustomer;
-            response.Message = "Customer updated successfully";
-            return response;
-        }
-        catch (Exception e)
-        {
-            response.Message = e.Message;
-            response.Status = false;
-            Console.WriteLine($"Failed to updated customer with id: {customer.Id} - {e}");
             return response;
         }
     }
