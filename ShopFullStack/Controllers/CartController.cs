@@ -22,6 +22,12 @@ public class CartController: Controller
         _cartService = cartService;
         _customerService = customerService;
     }
+    
+    [HttpPost]
+    public IActionResult Checkout()
+    {
+        return RedirectToAction("OrdersPage", "Order");
+    }
 
     [HttpPost]
     public async Task<IActionResult> AddToCart(long productId, int quantity)
@@ -53,36 +59,35 @@ public class CartController: Controller
             var savedCart = newCartResponse.Data;
             if (savedCart != null)
             {
-              cartItem.CartId = savedCart.Id;
-               await _cartService.AddItemToCart(newCart.Id, cartItem);
+               await _cartService.AddItemToCart(savedCart, cartItem);
             }
         }
         else
         {
-            cartItem.CartId = cartByCustomerId.Data.Id;
-            await _cartService.AddItemToCart(cartByCustomerId.Data.Id, cartItem);
+            await _cartService.AddItemToCart(cartByCustomerId.Data, cartItem);
         }
         return RedirectToAction("CartPage", "Cart");
     }
 
-    [HttpGet]
-    public IActionResult UpdateCart()
+    [HttpPost]
+    public async Task<IActionResult> RemoveItem(long cartItemId)
     {
-        return View();
+        var customer = await GetCurrentCustomer();
+        if (customer == null)
+        {
+            return RedirectToAction("CartPage", "Cart");
+        }
+        var cartByCustomerId = await _cartService
+            .GetCartByCustomerId(customer.Id);
+        
+        if (cartByCustomerId.Data != null)
+        {
+           await _cartService
+               .RemoveItemFromCart(cartByCustomerId.Data.Id, cartItemId);
+        }
+        return RedirectToAction("CartPage", "Cart");
     }
     
-    [HttpGet]
-    public IActionResult RemoveItem()
-    {
-        return View();
-    }
-    
-    [HttpGet]
-    public IActionResult Checkout()
-    {
-        return View();
-    }
-
     
     [HttpGet]
     public async Task<IActionResult>  CartPage()

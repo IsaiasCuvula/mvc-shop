@@ -4,21 +4,23 @@
     ViewData["Title"] = "Shopping Cart";
 }
 
-<div class="text-center">
-    <h2>Your Cart</h2>
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Your Cart</h2>
+    </div>
 
     @if (Model.CartItems.Any())
-    
     {
-        <form asp-action="UpdateCart" method="post">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                </tr>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Product</th>
+                        <th scope="col" class="text-center">Quantity</th>
+                        <th scope="col" class="text-end">Total</th>
+                        <th scope="col" class="text-center">Action</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.CartItems)
@@ -26,15 +28,23 @@
                         @if (item.Product != null)
                         {
                             <tr>
-                                <td>@item.Product.Name</td>
                                 <td>
-                                    <input type="number" class="form-control" name="cartItemQuantities[@item.CartItemId]" value="@item.Quantity" min="1"/>
+                                    <img src="@Url.Content($"~/images/products/{item.Product.ImageUrl}")"
+                                         alt="@item.Product.Name"
+                                         class="img-thumbnail rounded"
+                                         style="width: 60px; height: 60px; object-fit: cover;">
                                 </td>
-                                <td>@item.Total.ToString("C")</td>
                                 <td>
+                                    <span class="fw-semibold">@item.Product.Name</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-secondary p-2">@item.Quantity</span>
+                                </td>
+                                <td class="text-end fw-bold">@item.Total.ToString("C")</td>
+                                <td class="text-center">
                                     <form asp-controller="Cart" asp-action="RemoveItem" method="post" style="display:inline;">
-                                        <input type="hidden" name="cartItemId" value="@item.CartItemId"/>
-                                        <button type="submit" class="btn btn-danger">
+                                        <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="bi bi-trash-fill"></i> Delete
                                         </button>
                                     </form>
@@ -44,19 +54,27 @@
                     }
                 </tbody>
             </table>
-    
-            <button type="submit" class="btn btn-primary">Update Cart</button>
-        </form>
-    
-        <form asp-controller="Cart" asp-action="Checkout" method="post">
-            <button type="submit" class="btn btn-success">Proceed to Checkout</button>
-        </form>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a asp-controller="Product" asp-action="ProductsPage" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Continue Shopping
+            </a>
+            <form asp-controller="Cart" asp-action="Checkout" method="post">
+                <button type="submit" class="btn btn-success btn-lg">
+                    Proceed to Checkout <i class="bi bi-arrow-right"></i>
+                </button>
+            </form>
+        </div>
     }
     else
     {
-        <p>Your cart is empty. Start shopping!</p>
-        <p>
-            <a asp-controller="Product" asp-action="ProductsPage" class="btn btn-primary m-3">Shopping now</a>
-        </p>
+        <div class="alert alert-info text-center mt-5">
+            <h5 class="fw-bold">Your cart is empty!</h5>
+            <p>Start adding items to your cart to see them here.</p>
+            <a asp-controller="Product" asp-action="ProductsPage" class="btn btn-primary mt-3">
+                Start Shopping <i class="bi bi-cart"></i>
+            </a>
+        </div>
     }
 </div>

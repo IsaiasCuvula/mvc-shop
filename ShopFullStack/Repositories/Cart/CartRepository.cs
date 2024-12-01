@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ShopFullStack.Data;
 using ShopFullStack.Models;
 
+namespace ShopFullStack.Repositories;
 
 public class CartRepository: ICartRepository
 {
@@ -11,6 +12,17 @@ public class CartRepository: ICartRepository
     public CartRepository(AppDbContext context)
     {
         _context = context;
+    }
+    
+    public async Task<Cart?> UpdateItemInCartAsync(long cartId, CartItem cartItem)
+    {
+        var cart = await GetByIdAsync(cartId);
+        if (cart != null)
+        {
+            cart.CartItems.Add(cartItem);
+            await _context.SaveChangesAsync();
+        }
+        return cart;
     }
 
     public async Task<Cart?> AddItemToCartAsync(long cartId, CartItem cartItem)
@@ -54,11 +66,6 @@ public class CartRepository: ICartRepository
             .Include(c => c.CartItems)
             .ThenInclude(ci => ci.Product)
             .FirstOrDefaultAsync(c => c.CustomerId == customerId);
-    }
-
-    public async Task<List<Cart>> GetAllAsync()
-    {
-        return await _context.Carts.ToListAsync();
     }
 
     public async Task<Cart> AddAsync(Cart cart)

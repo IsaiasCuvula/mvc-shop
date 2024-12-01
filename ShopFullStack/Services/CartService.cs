@@ -34,16 +34,14 @@ public class CartService
             return response;
         }
     }
-
     
-    
-    public async Task<ApiResponse<Cart>> RemoveItemFromCart(long cartId, CartItem cartItem)
+    public async Task<ApiResponse<Cart>> RemoveItemFromCart(long cartId, long cartItemId)
     {
         ApiResponse<Cart> response = new ApiResponse<Cart>();
         try
         {
             var result=   await _cartRepository
-                .RemoveItemFromCartAsync(cartId, cartItem.CartItemId);
+                .RemoveItemFromCartAsync(cartId,cartItemId);
             
             response.Data = result;
             response.Message = "Item removed successfully from cart";
@@ -58,15 +56,33 @@ public class CartService
         }
     }
     
-    public async Task<ApiResponse<Cart>> AddItemToCart(long cartId, CartItem cartItem)
+    public async Task<ApiResponse<Cart>> AddItemToCart(Cart cart, CartItem cartItem)
     {
         ApiResponse<Cart> response = new ApiResponse<Cart>();
+        Cart? newCart = new Cart();
         try
         {
+            cartItem.CartId = cart.Id;
             cartItem.Total = await GetTotalByProduct(cartItem);
             //
-            var result=   await _cartRepository.AddItemToCartAsync(cartId, cartItem);
-            response.Data = result;
+            var productInCart = cart.CartItems
+                .FirstOrDefault(x => x.ProductId == cartItem.ProductId);
+            
+            if (productInCart == null)
+            {
+                newCart = await _cartRepository
+                    .AddItemToCartAsync(cartItem.CartId, cartItem);
+            }
+            else
+            {
+                productInCart.Quantity += cartItem.Quantity;
+                productInCart.Total += cartItem.Total;
+                
+                newCart =  await _cartRepository.
+                    AddItemToCartAsync(cartItem.CartId, productInCart);
+            }
+           
+            response.Data = newCart;
             response.Message = "Item added successfully to cart";
             return response;
         }
