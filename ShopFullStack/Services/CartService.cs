@@ -56,10 +56,8 @@ public class CartService
         }
     }
     
-    public async Task<ApiResponse<Cart>> AddItemToCart(Cart cart, CartItem cartItem)
+    public async Task AddItemToCart(Cart cart, CartItem cartItem)
     {
-        ApiResponse<Cart> response = new ApiResponse<Cart>();
-        Cart? newCart = new Cart();
         try
         {
             cartItem.CartId = cart.Id;
@@ -70,28 +68,20 @@ public class CartService
             
             if (productInCart == null)
             {
-                newCart = await _cartRepository
+                await _cartRepository
                     .AddItemToCartAsync(cartItem.CartId, cartItem);
             }
             else
             {
                 productInCart.Quantity += cartItem.Quantity;
                 productInCart.Total += cartItem.Total;
-                
-                newCart =  await _cartRepository.
+                await _cartRepository.
                     AddItemToCartAsync(cartItem.CartId, productInCart);
             }
-           
-            response.Data = newCart;
-            response.Message = "Item added successfully to cart";
-            return response;
         }
         catch (Exception e)
         {
-            response.Message = e.Message;
-            response.Status = false;
             Console.WriteLine($"Failed to add item to cart - {e}");
-            return response;
         }
     }
     
@@ -150,6 +140,7 @@ public class CartService
                 response.Message = "Cart not found";
                 return response;
             }
+            await UpdateProductStockQty(cart);
             cart.CartItems.Clear();
             await _cartRepository.ClearCartAsync(cart);
            
@@ -166,6 +157,18 @@ public class CartService
         }
     }
     
+    private async Task UpdateProductStockQty(Cart cart)
+    {
+        foreach (var item in cart.CartItems)
+        {
+            var product = await _productRepository.GetByIdAsync(item.ProductId);
+            if (product != null)
+            {
+                product.Stock -= item.Quantity;
+                await _productRepository.UpdateAsync(product);
+            }
+        }
+    }
     
     private async Task<decimal> GetTotalByProduct(CartItem cartItem)
     {
