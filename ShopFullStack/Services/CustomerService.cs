@@ -84,54 +84,54 @@ public class CustomerService
         }
     }
     
-    public async Task<ApiResponse<Customer>> GetTopCustomerByTurnover()
-    {
-        ApiResponse<Customer> response = new ApiResponse<Customer>();
-        Dictionary<long, decimal> customersByTurnover = new Dictionary<long, decimal>();
-        try
-        {
-            var orders = await _orderRepository.GetAllAsync();
-
-            foreach (var order in orders)
-            {
-                if (customersByTurnover.ContainsKey(order.CustomerNumber))
-                {
-                    customersByTurnover[order.CustomerNumber] += order.Total;
-                }
-                else
-                {
-                    customersByTurnover[order.CustomerNumber] = order.Total;
-                }
-            }
-            var sortedProducts = customersByTurnover.OrderByDescending(x => x.Value).ToList();
-
-            if (sortedProducts.Count <= 0)
-            {
-                response.Message = "There is no top customer yet";
-                return response;
-            }
-            
-            var topCustomerDic = sortedProducts.First();
-            var topCustomer = await _customerRepository.GetByNumberAsync(topCustomerDic.Key);
-
-            if (topCustomer == null)
-            {
-                response.Message = "There is no top customer yet";
-                return response;
-            }
-            response.Data = topCustomer;
-            response.Message = "Top customer fetched successfully";
-            return response;
-        }
-        catch (Exception e)
-        {
-            response.Message = e.Message;
-            response.Status = false;
-            Console.WriteLine($"Failed to get top customer: {e}");
-            return response;
-        }
-    }
-
+    // public async Task<ApiResponse<Customer>> GetTopCustomerByTurnover()
+    // {
+    //     ApiResponse<Customer> response = new ApiResponse<Customer>();
+    //     Dictionary<long, decimal> customersByTurnover = new Dictionary<long, decimal>();
+    //     try
+    //     {
+    //         var orders = await _orderRepository.GetAllAsync();
+    //
+    //         foreach (var order in orders)
+    //         {
+    //             if (customersByTurnover.ContainsKey(order.CustomerNumber))
+    //             {
+    //                 customersByTurnover[order.CustomerNumber] += order.Total;
+    //             }
+    //             else
+    //             {
+    //                 customersByTurnover[order.CustomerNumber] = order.Total;
+    //             }
+    //         }
+    //         var sortedProducts = customersByTurnover.OrderByDescending(x => x.Value).ToList();
+    //
+    //         if (sortedProducts.Count <= 0)
+    //         {
+    //             response.Message = "There is no top customer yet";
+    //             return response;
+    //         }
+    //         
+    //         var topCustomerDic = sortedProducts.First();
+    //         var topCustomer = await _customerRepository.GetByNumberAsync(topCustomerDic.Key);
+    //
+    //         if (topCustomer == null)
+    //         {
+    //             response.Message = "There is no top customer yet";
+    //             return response;
+    //         }
+    //         response.Data = topCustomer;
+    //         response.Message = "Top customer fetched successfully";
+    //         return response;
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         response.Message = e.Message;
+    //         response.Status = false;
+    //         Console.WriteLine($"Failed to get top customer: {e}");
+    //         return response;
+    //     }
+    // }
+    
     
     public async Task<ApiResponse<List<Customer>>> GetAllCustomerShoppedLasWeek()
     {
@@ -172,7 +172,7 @@ public class CustomerService
             return response;
         }
     }
-  
+    
     public async Task<ApiResponse<Customer>>  DeleteCustomerById(long id)
     {
         ApiResponse<Customer> response = new ApiResponse<Customer>();
@@ -224,7 +224,7 @@ public class CustomerService
             return response;
         }
     }
-
+    
     public async Task<ApiResponse<List<Customer>>> GetAllCustomers()
     {
         ApiResponse<List<Customer>> response = new ApiResponse<List<Customer>>();

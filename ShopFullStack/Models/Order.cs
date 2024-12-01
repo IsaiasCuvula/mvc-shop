@@ -9,30 +9,41 @@ namespace ShopFullStack.Models;
 public class Order
 {
    [Column("id")]
-   public long Id { get; set; } 
-   [Column("customer_number")]
-   public long CustomerNumber {get;set;}
-   [Column("product_number")]
-   public long ProductNumber { get; set; }
-  
-   [ValidateNever]
-   public Product? Product { get; set; }
-   
-   [Column("quantity")]
-   public int Quantity {get;set;}
-   [Column("order_date")]
-   public DateTime OrderDate {get;set;}
-   [Column("payment_date")]
-   public DateTime PaymentDate {get;set;}
-   [Column("payment_status")]
-   public PaymentStatus PaymentStatus {get;set;}
-   [Column("return_status")]
-   public ReturnStatus ReturnStatus {get;set;}
+   public long Id { get; set; }
+
+   [Column("customer_id")]
+   public long CustomerId { get; set; }
+        
+   [ValidateNever, Column("customer")]
+   public Customer? Customer { get; set; }
+        
+   [Column("cart_id")]
+   public long CartId { get; set; }
+
+   [ValidateNever, Column("cart")]
+   public Cart? Cart { get; set; }
+
+   [Column("order_items_id")]
+   public ICollection<CartItem> OrderItems { get; set; } = new List<CartItem>();
+
    [Column("total")]
-   public decimal Total {get;set;}
-   [Column("group_order_id")]
-   public String GroupOrderId { get; set; }
+   public decimal Total { get; set; }
+        
+   [Column("status")]
+   public OrderStatus Status { get; set; } = OrderStatus.Pending;
    
-   [Column("customer_id"), JsonIgnore, ValidateNever]
-   public Customer? Customer {get;set;}
+   [Column("payment_status")]
+   public PaymentStatus OrderPaymentStatus { get; set; } = PaymentStatus.Unpaid; 
+
+   [Column("order_returned_status")]
+   public ReturnStatus OrderReturnedStatus { get; set; } = ReturnStatus.NotReturned; 
+
+   [Column("shipping_address")]
+   public string ShippingAddress { get; set; } = string.Empty;
+
+   [Column("created_at")]
+   public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
+        
+   [Column("shipped_at")]
+   public DateTime? ShippedAt { get; set; }
 }

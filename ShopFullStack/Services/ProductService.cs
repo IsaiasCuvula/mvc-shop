@@ -79,44 +79,44 @@ public class ProductService
         }
     }
 
-    public async Task<List<Product>> GetMostPopularProducts()
-    {
-        Dictionary<long, int> productsCount = new Dictionary<long, int>();
-        List<Product> popularProducts = new List<Product>();
-
-        try
-        {
-            var orders = await _orderRepository.GetAllAsync();
-
-            foreach (var order in orders)
-            {
-                if (productsCount.ContainsKey(order.ProductNumber))
-                {
-                    productsCount[order.ProductNumber] += order.Quantity;
-                }
-                else
-                {
-                    productsCount[order.ProductNumber] = order.Quantity;
-                }
-            }
-            var sortedProducts = productsCount
-                .OrderByDescending(x => x.Value);
-            foreach (var dic in sortedProducts)
-            {
-                var product = await _productRepository.GetByNumberAsync(dic.Key);
-                if (product != null)
-                {                
-                    popularProducts.Add(product);
-                }
-            }
-            return popularProducts;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Failed to get the most popular products: {e}");
-            return [];
-        }
-    }
+    // public async Task<List<Product>> GetMostPopularProducts()
+    // {
+    //     Dictionary<long, int> productsCount = new Dictionary<long, int>();
+    //     List<Product> popularProducts = new List<Product>();
+    //
+    //     try
+    //     {
+    //         var orders = await _orderRepository.GetAllAsync();
+    //
+    //         foreach (var order in orders)
+    //         {
+    //             if (productsCount.ContainsKey(order.ProductNumber))
+    //             {
+    //                 productsCount[order.ProductNumber] += order.Quantity;
+    //             }
+    //             else
+    //             {
+    //                 productsCount[order.ProductNumber] = order.Quantity;
+    //             }
+    //         }
+    //         var sortedProducts = productsCount
+    //             .OrderByDescending(x => x.Value);
+    //         foreach (var dic in sortedProducts)
+    //         {
+    //             var product = await _productRepository.GetByNumberAsync(dic.Key);
+    //             if (product != null)
+    //             {                
+    //                 popularProducts.Add(product);
+    //             }
+    //         }
+    //         return popularProducts;
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine($"Failed to get the most popular products: {e}");
+    //         return [];
+    //     }
+    // }
     
     public async Task<ApiResponse<List<Product>>> GetProductsExpiringInNext3Months()
     {

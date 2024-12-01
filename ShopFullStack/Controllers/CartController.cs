@@ -24,8 +24,17 @@ public class CartController: Controller
     }
     
     [HttpPost]
-    public IActionResult Checkout()
+    public async Task<IActionResult> Checkout(long cartId)
     {
+        Console.WriteLine("********************************");
+        Console.WriteLine($"cartId {cartId}");
+        Console.WriteLine("********************************");
+        var response = await _cartService.GetCartById(cartId);
+        var cart = response.Data;
+        if (cart != null)
+        {
+            
+        }
         return RedirectToAction("OrdersPage", "Order");
     }
 
