@@ -25,4 +25,7 @@ public class CartItem
     [ValidateNever, Column("cart")]
     public Cart Cart { get; set; }
     
+    [ValidateNever,Column("created_at")]
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    
 }

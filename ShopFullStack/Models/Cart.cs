@@ -16,4 +16,7 @@ public class Cart
     
     [Column("cart_items_id")]
     public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+    
+    [ValidateNever,Column("created_at")]
+    public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
 }
