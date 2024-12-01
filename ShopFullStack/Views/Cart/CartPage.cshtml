@@ -1,0 +1,58 @@
+@model Cart
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="text-center">
+    <h2>Your Cart</h2>
+
+    @if (Model.CartItems.Any())
+    {
+        <form asp-action="UpdateCart" method="post">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr>
+                        <td>@item.Product.Name</td>
+                        <td>
+                            <input type="number" class="form-control" name="cartItemQuantities[@item.CartItemId]" value="@item.Quantity" min="1" />
+                        </td>
+                        <td>@item.Total.ToString("C")</td>
+                        <td>
+                            <form asp-controller="Cart" asp-action="RemoveItem" method="post" style="display:inline;">
+                                <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash-fill"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+    
+            <button type="submit" class="btn btn-primary">Update Cart</button>
+        </form>
+    
+        <form asp-controller="Cart" asp-action="Checkout" method="post">
+            <button type="submit" class="btn btn-success">Proceed to Checkout</button>
+        </form>
+    }
+    else
+    {
+        <p>Your cart is empty. Start shopping!</p>
+        <p>
+            <a asp-controller="Product" asp-action="ProductsPage" class="btn btn-primary m-3">Shopping now</a>
+        </p>
+    }
+</div>
