@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopFullStack.Data;
 using ShopFullStack.Repositories;
+using ShopFullStack.Repositories.Cart;
 using ShopFullStack.Repositories.Orders;
 using ShopFullStack.Repositories.Product;
 using ShopFullStack.Services;
@@ -28,6 +29,9 @@ builder.Services.AddScoped<ProductService>();
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<OrderService>();
+
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<CartService>();
 
 builder.Services.AddControllers();
 

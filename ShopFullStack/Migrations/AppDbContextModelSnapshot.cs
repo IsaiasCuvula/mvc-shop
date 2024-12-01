@@ -222,6 +222,64 @@ namespace ShopFullStack.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ShopFullStack.Models.Cart", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("customer_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("ShopFullStack.Models.CartItem", b =>
+                {
+                    b.Property<long>("CartItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("cart_item_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("CartItemId"));
+
+                    b.Property<long>("CartId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("cart_id");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer")
+                        .HasColumnName("product_id");
+
+                    b.Property<long>("ProductId1")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("numeric")
+                        .HasColumnName("total");
+
+                    b.HasKey("CartItemId");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("ProductId1");
+
+                    b.ToTable("CartItems");
+                });
+
             modelBuilder.Entity("ShopFullStack.Models.Customer", b =>
                 {
                     b.Property<long>("Id")
@@ -443,6 +501,36 @@ namespace ShopFullStack.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ShopFullStack.Models.Cart", b =>
+                {
+                    b.HasOne("ShopFullStack.Models.Customer", "Customer")
+                        .WithOne("Cart")
+                        .HasForeignKey("ShopFullStack.Models.Cart", "CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("ShopFullStack.Models.CartItem", b =>
+                {
+                    b.HasOne("ShopFullStack.Models.Cart", "Cart")
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopFullStack.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ShopFullStack.Models.Order", b =>
                 {
                     b.HasOne("ShopFullStack.Models.Customer", "Customer")
@@ -458,8 +546,16 @@ namespace ShopFullStack.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ShopFullStack.Models.Cart", b =>
+                {
+                    b.Navigation("CartItems");
+                });
+
             modelBuilder.Entity("ShopFullStack.Models.Customer", b =>
                 {
+                    b.Navigation("Cart")
+                        .IsRequired();
+
                     b.Navigation("Orders");
                 });
 

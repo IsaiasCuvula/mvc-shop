@@ -49,4 +49,7 @@ public class Customer
     
     [Column("user_id")]
     public string AppUserId { get; set; }
+    
+    [ValidateNever, Column("carts"), JsonIgnore]
+    public Cart Cart { get; set; }
 }

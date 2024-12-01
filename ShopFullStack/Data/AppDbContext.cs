@@ -13,5 +13,36 @@ public class AppDbContext: IdentityDbContext<IdentityUser>
     public DbSet<Product> Products { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder); 
+        
+        modelBuilder.Entity<Cart>()
+            .HasOne(c => c.Customer)
+            .WithOne(cu => cu.Cart)
+            .HasForeignKey<Cart>(c => c.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<CartItem>()
+            .HasOne(ci => ci.Cart)
+            .WithMany(c => c.CartItems)
+            .HasForeignKey(ci => ci.CartId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // modelBuilder.Entity<Order>()
+        //     .HasOne(o => o.Customer)
+        //     .WithMany(cu => cu.Orders)
+        //     .HasForeignKey(o => o.CustomerId)
+        //     .OnDelete(DeleteBehavior.Cascade);
+        //
+        // modelBuilder.Entity<OrderItem>()
+        //     .HasOne(oi => oi.Order)
+        //     .WithMany(o => o.OrderItems)
+        //     .HasForeignKey(oi => oi.OrderId)
+        //     .OnDelete(DeleteBehavior.Cascade);
+    }
     
 }
