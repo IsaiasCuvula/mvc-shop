@@ -61,6 +61,7 @@
                 <i class="bi bi-arrow-left"></i> Continue Shopping
             </a>
             <form asp-controller="Cart" asp-action="Checkout" method="post">
+                <input type="hidden" name="CartId" value="@Model.Id" />
                 <button type="submit" class="btn btn-success btn-lg">
                     Proceed to Checkout <i class="bi bi-arrow-right"></i>
                 </button>
