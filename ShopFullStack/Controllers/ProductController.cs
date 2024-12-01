@@ -17,7 +17,7 @@ public class ProductController: Controller
         _webHostEnvironment = webHostEnvironment;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> ProductsPage()
     {
         return View(await _productService.GetAllProducts());
     }
@@ -38,7 +38,7 @@ public class ProductController: Controller
         try
         {
             await _productService.DeleteProductById(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("ProductsPage");
         }
         catch (Exception e)
         {
@@ -46,7 +46,7 @@ public class ProductController: Controller
             Console.WriteLine($"Error: {e.Message}");
             Console.WriteLine("****************************");
             
-            return RedirectToAction("Index");
+            return RedirectToAction("ProductsPage");
         }
     } 
     
@@ -92,7 +92,7 @@ public class ProductController: Controller
                 await _productService.UpdateProduct(product);
             }
             
-            return RedirectToAction("Index", "Product");
+            return RedirectToAction("ProductsPage", "Product");
         }
         catch (Exception e)
         {
