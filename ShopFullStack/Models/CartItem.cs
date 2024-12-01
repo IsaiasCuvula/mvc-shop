@@ -15,17 +15,17 @@ public class CartItem
     public decimal Total { get; set; }
     
     [Column("product_id")]
-    public int ProductId { get; set; }
+    public long ProductId { get; set; }
     
     [ValidateNever,Column("product")]
-    public Product Product { get; set; }
+    public Product? Product { get; set; }
     
     [Column("cart_id")]
     public long CartId { get; set; }
     [ValidateNever, Column("cart")]
-    public Cart Cart { get; set; }
+    public Cart? Cart { get; set; }
     
     [ValidateNever,Column("created_at")]
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
     
 }
