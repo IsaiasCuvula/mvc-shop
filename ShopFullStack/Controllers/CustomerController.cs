@@ -62,10 +62,6 @@ public class CustomerController: Controller
         ViewData["AppUserId"] = appUserId;
         var result = await _customerService
             .GetCustomerByEmail(email);
-        Console.WriteLine("*************************************************************");
-        Console.WriteLine($"Update customer get method Data: {result.Data}");
-        Console.WriteLine($"Update customer get method Message: {result.Message}");
-        Console.WriteLine("*************************************************************");
 
         if (result.Data == null)
         {
@@ -89,12 +85,6 @@ public class CustomerController: Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateCustomer(Customer customer)
     {
-        Console.WriteLine("*******************************");
-        Console.WriteLine($"Customer Id: {customer.Id}");
-        Console.WriteLine($"Customer email: {customer.Email}");
-        Console.WriteLine($"AppUserId: {customer.AppUserId}");
-        Console.WriteLine("*******************************");
-        
         var user = _userManager.GetUserAsync(User).Result;
         var email = user == null?  HttpContext.Session.GetString("Email"): user.Email;
         var appUserId = user == null? HttpContext.Session.GetString("AppUserId") : user.Id;
@@ -115,20 +105,10 @@ public class CustomerController: Controller
         {
             ApiResponse<Customer> response = new ApiResponse<Customer>();
             //If user does not have all info, create a customer
-            if (customer.Id == 0)
-            {
-                response = await _customerService.CreateCustomer(customer);
-            }
-            else
-            {
-                //Update
-                response = await _customerService.UpdateCustomer(customer);
-            }
+            response = customer.Id == 0 ? 
+                await _customerService.CreateCustomer(customer) : 
+                await _customerService.UpdateCustomer(customer);
             
-            Console.WriteLine("*******************************");
-            Console.WriteLine($"Message: {response.Message}");
-            Console.WriteLine($"Data: {response.Data}");
-            Console.WriteLine("*******************************");
             return View(response.Data);
         }
     }
