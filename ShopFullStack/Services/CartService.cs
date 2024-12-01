@@ -14,7 +14,7 @@ public class CartService
         _productRepository = productRepository;
     }
     
-    public async Task<ApiResponse<Cart>> GetByCustomerId(long customerId)
+    public async Task<ApiResponse<Cart>> GetCartByCustomerId(long customerId)
     {
         ApiResponse<Cart> response = new ApiResponse<Cart>();
         try
@@ -63,6 +63,8 @@ public class CartService
         ApiResponse<Cart> response = new ApiResponse<Cart>();
         try
         {
+            cartItem.Total = await GetTotalByProduct(cartItem);
+            //
             var result=   await _cartRepository.AddItemToCartAsync(cartId, cartItem);
             response.Data = result;
             response.Message = "Item added successfully to cart";
@@ -84,10 +86,6 @@ public class CartService
         ApiResponse<Cart> response = new ApiResponse<Cart>();
         try
         {
-            foreach (var cartItem in cart.CartItems)
-            {
-                cartItem.Total = await GetTotalByProduct(cartItem);
-            }
             var result = await _cartRepository.AddAsync(cart);
             response.Data = result;
             response.Message = "Cart created successfully";
