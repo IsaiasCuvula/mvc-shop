@@ -22,7 +22,7 @@ public class OrderRepository: IOrderRepository
     public async Task<List<Order>> GetAllAsync()
     {
         return await _context.Orders
-            .OrderBy(o=>o.Id)
+            .OrderByDescending(o=>o.CreatedAt)
             .ToListAsync();
     }
 
