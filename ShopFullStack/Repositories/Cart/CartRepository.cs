@@ -75,9 +75,9 @@ public class CartRepository: ICartRepository
         return cart;
     }
 
-    public async Task DeleteAsync(Cart cart)
+    public async Task ClearCartAsync(Cart cart)
     {
-        _context.Carts.Remove(cart);
+        _context.Carts.Update(cart);
         await _context.SaveChangesAsync();
     }
 }

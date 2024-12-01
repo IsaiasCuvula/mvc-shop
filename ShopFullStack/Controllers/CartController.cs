@@ -9,33 +9,54 @@ public class CartController: Controller
 {
     
     private readonly CartService _cartService;
+    private readonly OrderService _orderService;
     private readonly CustomerService _customerService;
     private readonly UserManager<IdentityUser> _userManager;
     
     public CartController(
         CartService cartService, 
         UserManager<IdentityUser> userManager,
-        CustomerService customerService
+        CustomerService customerService,
+        OrderService orderService
     )
     {
+        _customerService = customerService;
         _userManager = userManager;
         _cartService = cartService;
-        _customerService = customerService;
+        _orderService = orderService;
     }
     
     [HttpPost]
     public async Task<IActionResult> Checkout(long cartId)
     {
-        Console.WriteLine("********************************");
-        Console.WriteLine($"cartId {cartId}");
-        Console.WriteLine("********************************");
         var response = await _cartService.GetCartById(cartId);
         var cart = response.Data;
-        if (cart != null)
+        if (cart == null)
         {
-            
+            return RedirectToAction("CartPage", "Cart");
         }
-        return RedirectToAction("OrdersPage", "Order");
+        else
+        {
+            var customerResponse = await _customerService
+                .GetCustomerById(cart.CustomerId);
+            
+            var order = new Order();
+            order.CustomerId = cart.CustomerId;
+            order.CartId = cartId;
+            order.OrderItems = cart.CartItems;
+            order.Total = cart.CartItems.Sum(ci => ci.Total);
+            if (customerResponse.Data != null)
+            {
+                order.ShippingAddress = customerResponse.Data.Address;
+                order.Customer = customerResponse.Data;
+            }
+            await _orderService.CreateOrder(order);
+            
+            //After placing order clear the cart
+            await _cartService.ClearCartById(cartId);
+            
+            return RedirectToAction("OrdersPage", "Order");
+        }
     }
 
     [HttpPost]

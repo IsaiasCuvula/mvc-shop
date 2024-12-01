@@ -95,8 +95,6 @@ public class CartService
         }
     }
     
-    
-    
     public async Task<ApiResponse<Cart>>  CreateCart(Cart cart)
     {
         ApiResponse<Cart> response = new ApiResponse<Cart>();
@@ -140,19 +138,20 @@ public class CartService
         }
     }
 
-    public async Task<ApiResponse<Cart>>  DeleteCartById(long id)
+    public async Task<ApiResponse<Cart>>  ClearCartById(long id)
     {
         ApiResponse<Cart> response = new ApiResponse<Cart>();
         try
         {
-            var cartItem = await _cartRepository.GetByIdAsync(id);
+            var cart = await _cartRepository.GetByIdAsync(id);
             
-            if (cartItem == null)
+            if (cart == null)
             {
                 response.Message = "Cart not found";
                 return response;
             }
-            await _cartRepository.DeleteAsync(cartItem);
+            cart.CartItems.Clear();
+            await _cartRepository.ClearCartAsync(cart);
            
             response.Data = null;
             response.Message = "Cart deleted successfully";
