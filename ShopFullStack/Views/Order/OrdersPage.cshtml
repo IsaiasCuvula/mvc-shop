@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IEnumerable<Order>
 
 @{
@@ -5,28 +6,51 @@
 }
 
 <div class="text-center">
-    <h2>Your Orders</h2>
-
     @if (Model.Any())
     {
-        @* <form asp-action="UpdateCart" method="post"> *@
-        <form method="post">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-            </table>
-    
-        </form>
+        <div class="container mt-4">
+            <h1 class="text-start">Orders</h1>
+            <div class="row gy-3">
+                @foreach (var order in Model)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <a href="@Url.Action("Details", "Order", new { id = order.Id })" class="text-decoration-none">
+                            <div class="card shadow-sm text-start">
+                                <div class="card-body">
+                                    <h5 class="card-title">Order #@order.Id</h5>
+                                    <p class="card-text">
+                                        <strong>Customer ID:</strong> @order.CustomerId<br />
+                                        <strong>Total:</strong> $@order.Total<br />
+                                        <strong>Status:</strong> @order.Status.ToString()<br />
+                                        <strong>Payment status: </strong>@order.OrderPaymentStatus<br />
+                                        <strong>Returned status: </strong>@order.OrderPaymentStatus<br />
+                                        <strong>Shipping address:</strong> @order.ShippingAddress<br />
+                                    </p>
+                                    <p class="text-muted">
+                                        <strong>Shipping at:</strong>
+                                        @if (order.ShippedAt.HasValue)
+                                        {
+                                            @order.ShippedAt.Value.ToString("yyyy-MM-dd HH:mm")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-warning">Awaiting shipment</span>
+                                        }
+                                        <br />
+                                        Created on: @order.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
     }
     else
     {
-        <p>Your orders are empty. Start shopping!</p>
+        <h2>Your Orders</h2>
+        <p class="mt-5">Your orders are empty. Start shopping!</p>
         <p>
             <a asp-controller="Product" asp-action="ProductsPage" class="btn btn-primary m-3">Shopping now</a>
         </p>

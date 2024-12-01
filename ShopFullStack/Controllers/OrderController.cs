@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ShopFullStack.Models;
 using ShopFullStack.Services;
 
 namespace ShopFullStack.Controllers;
@@ -23,16 +24,12 @@ public class OrderController: Controller
     }
 
     
-    // [HttpGet]
-    // public async Task<IActionResult>  OrdersPage()
-    // {  
-    //     var response = await _orderService.GetAllOrders();
-    //     if (response.Data == null)
-    //     {
-    //         return View();
-    //     }
-    //     return View(response.Data);
-    // }
+    [HttpGet]
+    public async Task<IActionResult>  OrdersPage()
+    {  
+        var response = await _orderService.GetAllOrders();
+        return  View(response.Data ?? new List<Order>());
+    }
     //
     // [HttpGet("unpaid")]
     // public async Task<ActionResult<ApiResponse<List<Order>>>> GetAllUnpaidOrders()

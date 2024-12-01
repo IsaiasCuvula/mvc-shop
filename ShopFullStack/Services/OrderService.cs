@@ -22,6 +22,43 @@ public class OrderService
         _customerRepository = customerRepository;
     }
     
+    public async Task<ApiResponse<List<Order>>> GetAllOrders()
+    {
+        ApiResponse<List<Order>> response = new ApiResponse<List<Order>>();
+        try
+        {
+          var orders = await _orderRepository.GetAllAsync();
+          response.Data = orders;
+          response.Message = orders.Count == 0 ? "There is no order created yet":"Orders successfully retrieved";
+          return response;
+        }
+        catch (Exception e)
+        {
+            response.Message = e.Message;
+            response.Status = false;
+            Console.WriteLine($"Failed to get all orders: {e}");
+            return response;
+        }
+    }
+    
+    public async Task<ApiResponse<Order>>  CreateOrder(Order order)
+    {
+        var response = new ApiResponse<Order>();
+        try
+        {
+            response.Data = await _orderRepository.AddAsync(order);
+            response.Message = "Order created successfully";
+            return response;
+        }
+        catch (Exception e)
+        {
+            response.Message = e.Message;
+            response.Status = false;
+            Console.WriteLine($"Failed to create order - {e}");
+            return response;
+        }
+    }
+    
     public async Task<ApiResponse<List<Order>>> GetAllUnpaidOrders()
     {
         ApiResponse<List<Order>> response = new ApiResponse<List<Order>>();
@@ -41,65 +78,26 @@ public class OrderService
         }
     }
 
-    public async Task<ApiResponse<List<Order>>> GetAllReturnedOrders()
-    {
-        ApiResponse<List<Order>> response = new ApiResponse<List<Order>>();
-        try
-        {
-            var returnedOrders = await _orderRepository.GetAllReturnedOrdersAsync();
-            response.Data = returnedOrders;
-            response.Message = returnedOrders.Count == 0 ? "There is no returned order yet":"All returned orders successfully retrieved";
-            return response;
-        }
-        catch (Exception e)
-        {
-            response.Message = e.Message;
-            response.Status = false;
-            Console.WriteLine($"Failed to get all returned orders: {e}");
-            return response;
-        }
-    }
-    
-    // public async Task<ApiResponse<List<Order>>>  CreateOrder(Order order)
+    // public async Task<ApiResponse<List<Order>>> GetAllReturnedOrders()
     // {
     //     ApiResponse<List<Order>> response = new ApiResponse<List<Order>>();
-    //     var customerNumber = order.Orders.First().CustomerNumber;
-    //     var groupOrderId = Guid.NewGuid().ToString();
-    //     List<Order> orders = new List<Order>();
     //     try
     //     {
-    //         var customer = await _customerRepository.GetByNumberAsync(customerNumber);
-    //         if (customer == null)
-    //         {
-    //             response.Message = "Customer not found";
-    //             return response;
-    //         }
-    //         foreach (var dto in order.Orders)
-    //         {
-    //             order.Total = await GetTotalByProduct(dto);
-    //             order.Customer = customer;
-    //             order.GroupOrderId = groupOrderId;
-    //             var savedOrder = await _orderRepository.AddAsync(order);
-    //             orders.Add(savedOrder);
-    //         }
-    //         
-    //         //Payment Update order
-    //         //var paidOrders = await CheckoutOrder(orders, userOrdersDto.DeliveryPrice);
-    //             
-    //         response.Data = orders;
-    //         response.Message = "Order created successfully";
+    //         var returnedOrders = await _orderRepository.GetAllReturnedOrdersAsync();
+    //         response.Data = returnedOrders;
+    //         response.Message = returnedOrders.Count == 0 ? "There is no returned order yet":"All returned orders successfully retrieved";
     //         return response;
     //     }
     //     catch (Exception e)
     //     {
-    //         response.Data = orders;
     //         response.Message = e.Message;
     //         response.Status = false;
-    //         Console.WriteLine($"Failed to create order - {e}");
+    //         Console.WriteLine($"Failed to get all returned orders: {e}");
     //         return response;
     //     }
     // }
     //
+    
     // private async Task<List<Order>> CheckoutOrder(List<Order> orders, decimal deliveryPrice)
     // {
     //     decimal totalToPay = orders.Sum(o => o.Total) + deliveryPrice;
@@ -216,22 +214,4 @@ public class OrderService
     //     }
     // }
     //
-    // public async Task<ApiResponse<List<Order>>> GetAllOrders()
-    // {
-    //     ApiResponse<List<Order>> response = new ApiResponse<List<Order>>();
-    //     try
-    //     {
-    //       var orders = await _orderRepository.GetAllAsync();
-    //       response.Data = orders;
-    //       response.Message = orders.Count == 0 ? "There is no order created yet":"Orders successfully retrieved";
-    //       return response;
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         response.Message = e.Message;
-    //         response.Status = false;
-    //         Console.WriteLine($"Failed to get all orders: {e}");
-    //         return response;
-    //     }
-    // }
 }
