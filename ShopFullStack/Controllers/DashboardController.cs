@@ -33,8 +33,6 @@ public class DashboardController: Controller
         var expiredProducts = await _productService.GetExpiredProducts();
         var expiringSoonProducts = await _productService.GetProductsExpiringInNext24Hours();
 
-        var pieChartData = await GetPieChartData();
-
         var viewModel = new DashboardViewModel
         {
             PopularProducts = popularProducts,
@@ -43,21 +41,43 @@ public class DashboardController: Controller
             Products = products,
             ExpiredProducts = expiredProducts.Data ?? [],
             ExpiringSoonProducts = expiringSoonProducts.Data ?? [],
-            PieChartData = pieChartData
         };
 
         return View(viewModel);
     }
     
-    
-    private async Task<List<PieChartItem>> GetPieChartData()
+    public async Task<IActionResult> ProductSalesChart(DateFilter dateFilter)
     {
-        var orders = await _orderService.AdminGetAllOrders(); 
-        return orders.Data == null ? [] : orders.Data.GroupBy(o => o.Id)
+        var startDate = dateFilter.StartDate;
+        var endDate = dateFilter.EndDate;
+
+        var pieChartData = await GetPieChartData(startDate, endDate);
+
+        return View(new ProductSalesViewModel
+        {
+            PieChartData = pieChartData,
+            DateFilter = dateFilter
+        });
+    }
+    
+    private async Task<List<PieChartItem>> GetPieChartData(DateTime? startDate, DateTime? endDate)
+    {
+        var orders = await _orderService.AdminGetAllOrders();
+    
+       
+        var filteredOrders = orders.Data == null? []: orders.Data 
+            .Where(o => (!startDate.HasValue || o.CreatedAt >= startDate) &&
+                        (!endDate.HasValue || o.CreatedAt <= endDate))
+            .ToList();
+
+   
+        return filteredOrders
+            .SelectMany(o => o.OrderItems)
+            .GroupBy(oi => oi.ProductId)
             .Select(g => new PieChartItem
             {
-                Label = $"Order To be implemented",
-                Value = g.Sum(o => o.Total)
+                Label = g.First().Product?.Name ?? "Unknown Product",
+                Value = g.Sum(oi => oi.Total)
             })
             .ToList();
     }

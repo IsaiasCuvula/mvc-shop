@@ -1,0 +1,45 @@
+@model ProductSalesViewModel
+
+@{
+    ViewData["Title"] = "Product Sales Chart";
+}
+
+<h2 class="text-primary text-center">Product Sales Chart</h2>
+
+<form asp-controller="Dashboard" asp-action="ProductSalesChart" method="get" class="mb-4">
+    <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" name="DateFilter.StartDate" class="form-control" value="@Model.DateFilter.StartDate?.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" name="DateFilter.EndDate" class="form-control" value="@Model.DateFilter.EndDate?.ToString("yyyy-MM-dd")" />
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+@if (Model.PieChartData?.Any() ?? false)
+{
+    <div class="d-flex justify-content-center">
+        <canvas id="pieChart" style="max-width: 400px;"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('pieChart').getContext('2d');
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.PieChartData.Select(d => d.Label))),
+                datasets: [{
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.PieChartData.Select(d => d.Value))),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                }]
+            }
+        });
+    </script>
+}
+else
+{
+    <p class="text-center">No data available for the selected period.</p>
+}
