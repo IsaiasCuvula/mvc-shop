@@ -22,6 +22,8 @@ public class OrderRepository: IOrderRepository
     public async Task<List<Order>> GetAllAsync()
     {
         return await _context.Orders
+            .Include(o => o.Customer)      
+            .Include(o => o.OrderItems) 
             .OrderByDescending(o=>o.CreatedAt)
             .ToListAsync();
     }
