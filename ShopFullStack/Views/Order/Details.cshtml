@@ -56,7 +56,7 @@
                     {
                         <tr>
                             <td>
-                                <img src="@Url.Content($"~/images/products/{item.Product.ImageUrl}")"
+                                <img src="@Url.Content("~/images/" + item.Product.ImageUrl)"
                                      alt="@item.Product.Name"
                                      class="img-thumbnail rounded"
                                      style="width: 60px; height: 60px; object-fit: cover;">
