@@ -37,7 +37,8 @@ public class OrderRepository: IOrderRepository
     {
         return await _context.Orders
             .Include(o => o.Customer)      
-            .Include(o => o.OrderItems) 
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product)
             .OrderByDescending(o=>o.CreatedAt)
             .ToListAsync();
     }

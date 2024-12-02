@@ -11,10 +11,12 @@
         <label for="startDate">Start Date</label>
         <input type="date" id="startDate" name="DateFilter.StartDate" class="form-control" value="@Model.DateFilter.StartDate?.ToString("yyyy-MM-dd")" />
     </div>
+    <br/>
     <div class="form-group">
         <label for="endDate">End Date</label>
         <input type="date" id="endDate" name="DateFilter.EndDate" class="form-control" value="@Model.DateFilter.EndDate?.ToString("yyyy-MM-dd")" />
     </div>
+    <br/>
     <button type="submit" class="btn btn-primary">Filter</button>
 </form>
 
