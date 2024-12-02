@@ -45,6 +45,7 @@
                 <tr>
                     <th scope="col">Image</th>
                     <th scope="col">Product</th>
+                    <th scope="col">Price</th>
                     <th scope="col" class="text-center">Quantity</th>
                     <th scope="col" class="text-end">Total</th>
                 </tr>
@@ -63,6 +64,9 @@
                             </td>
                             <td>
                                 <span class="fw-semibold">@item.Product.Name</span>
+                            </td>
+                            <td>
+                                <span class="fw-semibold">$@item.Product.Price</span>
                             </td>
                             <td class="text-center">
                                 <span class="badge bg-secondary p-2">@item.Quantity</span>
