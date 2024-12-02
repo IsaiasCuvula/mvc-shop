@@ -51,7 +51,6 @@ public class CartController: Controller
                 order.Customer = customerResponse.Data;
             }
             await _orderService.CreateOrder(order);
-            
             //After placing order clear the cart
             await _cartService.ClearCartById(cartId);
             
