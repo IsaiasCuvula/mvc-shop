@@ -37,6 +37,13 @@ public class AppDbContext: IdentityDbContext<IdentityUser>
             .WithMany(cu => cu.Orders) 
             .HasForeignKey(o => o.CustomerId) 
             .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<Order>()
+            .HasMany(o => o.OrderItems)
+            .WithOne()
+            .HasForeignKey(ci => ci.CartId)
+            .OnDelete(DeleteBehavior.Cascade);
+
     }
     
 }

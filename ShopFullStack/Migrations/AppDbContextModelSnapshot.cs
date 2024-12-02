@@ -264,9 +264,6 @@ namespace ShopFullStack.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<long?>("OrderId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint")
                         .HasColumnName("product_id");
@@ -282,8 +279,6 @@ namespace ShopFullStack.Migrations
                     b.HasKey("CartItemId");
 
                     b.HasIndex("CartId");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -531,7 +526,9 @@ namespace ShopFullStack.Migrations
 
                     b.HasOne("ShopFullStack.Models.Order", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ShopFullStack.Models.Product", "Product")
                         .WithMany()
