@@ -16,7 +16,7 @@ public class CartService
     
     public async Task<ApiResponse<Cart>> GetCartByCustomerId(long customerId)
     {
-        ApiResponse<Cart> response = new ApiResponse<Cart>();
+        var response = new ApiResponse<Cart>();
         try
         {
             var result=   await _cartRepository
@@ -81,7 +81,7 @@ public class CartService
     
     public async Task<ApiResponse<Cart>>  CreateCart(Cart cart)
     {
-        ApiResponse<Cart> response = new ApiResponse<Cart>();
+        var response = new ApiResponse<Cart>();
         try
         {
             var result = await _cartRepository.AddAsync(cart);
@@ -100,7 +100,7 @@ public class CartService
    
     public async Task<ApiResponse<Cart>> GetCartById(long id, long customerId)
     {
-        ApiResponse<Cart> response = new ApiResponse<Cart>();
+        var response = new ApiResponse<Cart>();
         try
         {
             var cart = await _cartRepository.GetByIdAsync(id, customerId);
