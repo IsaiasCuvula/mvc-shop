@@ -24,7 +24,7 @@ public class Order
    public Cart? Cart { get; set; }
 
    [Column("order_items_id")]
-   public ICollection<CartItem> OrderItems { get; set; } = new List<CartItem>();
+   public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
    [Column("total")]
    public decimal Total { get; set; }

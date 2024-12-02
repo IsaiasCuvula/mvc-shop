@@ -86,11 +86,15 @@ public class OrderController: Controller
             var customerResponse = await _customerService
                 .GetCustomerById(cart.CustomerId);
             
-            var order = new Order();
-            order.CustomerId = cart.CustomerId;
-            order.CartId = cartId;
-            order.OrderItems = cart.CartItems;
-            order.Total = cart.CartItems.Sum(ci => ci.Total);
+            var order = new Order
+            {
+                CustomerId = cart.CustomerId,
+                CartId = cartId,
+                OrderItems = AppHelpers.MapCartItemsToOrderItems(cart.CartItems), 
+                Total = cart.CartItems.Sum(ci => ci.Total), 
+                ShippingAddress = customerResponse.Data?.Address ?? string.Empty,
+                Customer = customerResponse.Data
+            };
             if (customerResponse.Data != null)
             {
                 order.ShippingAddress = customerResponse.Data.Address;

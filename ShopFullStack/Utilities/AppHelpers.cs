@@ -1,9 +1,27 @@
 using System.Security.Cryptography;
+using ShopFullStack.Models;
 
 namespace ShopFullStack.Utilities;
 
 public class AppHelpers
 {
+    
+
+    public static List<OrderItem> MapCartItemsToOrderItems(
+        ICollection<CartItem> cartItems
+    )
+    {
+        return cartItems.Select(cartItem => new OrderItem
+        {
+            ProductId = cartItem.ProductId,
+            Product = cartItem.Product,
+            Quantity = cartItem.Quantity,
+            PricePerItem =  cartItem.Product?.Price ?? 0, 
+            Total = cartItem.Total,
+            CreatedAt = DateTime.Now.ToUniversalTime() 
+        }).ToList();
+    }
+    
     public static int GenerateRandomNumber()
     {
         var currentYear = DateTime.Now.Year;
