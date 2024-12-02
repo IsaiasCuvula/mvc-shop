@@ -9,11 +9,17 @@ public class DashboardController: Controller
     
     private readonly OrderService _orderService;
     private readonly ProductService _productService;
+    private readonly CustomerService _customerService;
 
-    public DashboardController(OrderService orderService, ProductService productService)
+    public DashboardController(
+        OrderService orderService, 
+        ProductService productService,
+        CustomerService customerService
+        )
     {
         _orderService = orderService;
         _productService = productService;
+        _customerService = customerService;
     }
     
     [HttpGet]
@@ -32,6 +38,7 @@ public class DashboardController: Controller
         var products = await _productService.GetAllProducts();
         var expiredProducts = await _productService.GetExpiredProducts();
         var expiringSoonProducts = await _productService.GetProductsExpiringInNext24Hours();
+        var customerShoppedLasWeek = await _customerService.GetAllCustomerShoppedLasWeek();
 
         var viewModel = new DashboardViewModel
         {
@@ -41,6 +48,7 @@ public class DashboardController: Controller
             Products = products,
             ExpiredProducts = expiredProducts.Data ?? [],
             ExpiringSoonProducts = expiringSoonProducts.Data ?? [],
+            GetAllCustomerShoppedLasWeek = customerShoppedLasWeek.Data ?? [],
         };
 
         return View(viewModel);

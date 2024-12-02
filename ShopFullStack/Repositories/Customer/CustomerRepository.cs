@@ -22,8 +22,8 @@ public class CustomerRepository: ICustomerRepository
         var query = @"
         SELECT DISTINCT c.*
         FROM Orders o
-        JOIN Customers c ON o.customer_number = c.customer_number
-        WHERE o.order_date BETWEEN {0} AND {1}";
+        JOIN Customers c ON o.customer_id = c.Id
+        WHERE o.created_at BETWEEN {0} AND {1}";
 
         return await _context.Customers
             .FromSqlRaw(query, lastWeekMonday, lastWeekSunday)

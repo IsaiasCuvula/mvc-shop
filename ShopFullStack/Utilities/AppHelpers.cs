@@ -41,6 +41,7 @@ public class AppHelpers
         var lastWeekMonday = today.AddDays(-7 - daysSinceMonday);
         Console.WriteLine("**************************************");
         Console.WriteLine("Last week's Monday: " + lastWeekMonday.ToString("yyyy-MM-dd"));
+        Console.WriteLine("Last week's Sunday: " + lastWeekMonday.AddDays(6).ToString("yyyy-MM-dd"));
         Console.WriteLine("**************************************");
         return lastWeekMonday;
     }

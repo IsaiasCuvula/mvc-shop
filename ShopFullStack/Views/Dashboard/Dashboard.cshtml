@@ -102,6 +102,27 @@
         </ul>
     </div>
 
+    <!-- Customer shopped last week -->
+    <div class="mb-5">
+        <h2 class="text-primary">Customers that Shopped last week</h2>
+        <ul class="list-group">
+            @if (Model.GetAllCustomerShoppedLasWeek.Any())
+            {
+                @foreach (var customer in Model.GetAllCustomerShoppedLasWeek)
+                {
+                     <li class="list-group-item">
+                         <strong>@customer.Name</strong>
+                         <span class="text-warning"> - @customer.Email</span>
+                     </li>
+                }
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No Customer who shop last week.</li>
+            }
+        </ul>
+    </div>
+
     <!-- Pie Chart Section -->
     <div class="dashboard-section">
         <h2>Product Sales</h2>

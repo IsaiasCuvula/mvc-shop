@@ -8,4 +8,5 @@ public class DashboardViewModel
     public List<Product> Products { get; set; } = new List<Product>();
     public List<Product> ExpiredProducts { get; set; } = new List<Product>();
     public List<Product> ExpiringSoonProducts { get; set; } = new List<Product>();
+    public List<Customer> GetAllCustomerShoppedLasWeek { get; set; } = new List<Customer>();
 }
