@@ -170,6 +170,25 @@
             }
         </ul>
     </div>
+    
+    <!-- Customer who made the largest turnover -->
+    <div class="mb-5">
+        <h2 class="text-primary">Top Customer</h2>
+        <ul class="list-group">
+            @if (Model.GetTopCustomerByTurnover != null)
+            {
+                    <li class="list-group-item">
+                        <strong>@Model.GetTopCustomerByTurnover.Name</strong>
+                        <span class="text-warning"> - @Model.GetTopCustomerByTurnover.Email</span>
+                    </li>
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No top Customer yet.</li>
+            }
+        </ul>
+    </div>
+
 
     <!-- Pie Chart Section -->
     <div class="dashboard-section">

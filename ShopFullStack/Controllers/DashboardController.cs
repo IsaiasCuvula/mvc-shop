@@ -41,6 +41,7 @@ public class DashboardController: Controller
         var customerShoppedLasWeek = await _customerService.GetAllCustomerShoppedLasWeek();
         var productsExpiringInNext3Months = await _productService.GetProductsExpiringInNext3Months();
         var mostPopularProducts = await _productService.GetMostPopularProducts();
+        var topCustomer = await _customerService.GetTopCustomerByTurnover();
         //
         var viewModel = new DashboardViewModel
         {
@@ -53,6 +54,7 @@ public class DashboardController: Controller
             GetAllCustomerShoppedLasWeek = customerShoppedLasWeek.Data ?? [],
             ProductsExpiringInNext3Months = productsExpiringInNext3Months.Data ?? [],
             MostPopularProducts = mostPopularProducts,
+            GetTopCustomerByTurnover = topCustomer.Data,
         };
 
         return View(viewModel);

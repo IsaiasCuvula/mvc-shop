@@ -11,4 +11,5 @@ public class DashboardViewModel
     public List<Product> ProductsExpiringInNext3Months { get; set; } = new List<Product>();
     public List<Product> MostPopularProducts { get; set; } = new List<Product>();
     public List<Customer> GetAllCustomerShoppedLasWeek { get; set; } = new List<Customer>();
+    public Customer? GetTopCustomerByTurnover { get; set; }
 }
