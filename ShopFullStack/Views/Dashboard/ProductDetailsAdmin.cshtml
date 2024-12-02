@@ -28,7 +28,7 @@
 
             <p class="text-muted">Expires on: @Model.ExpirationDate.ToString("MMMM dd, yyyy")</p>
 
-            <form asp-controller="Product" asp-action="AddEdit" asp-route-id="@Model.Id">
+            <form method="get" asp-controller="Product" asp-action="AddEdit" asp-route-id="@Model.Id">
                 <input type="hidden" name="id" value="@Model.Id" />
 
                 @if (Model.Stock > 0)

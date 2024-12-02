@@ -53,6 +53,10 @@ public class ProductController: Controller
     {
         ViewBag.Products = await _productService.GetAllProducts();
         
+        Console.WriteLine("****************************");
+        Console.WriteLine($"product number: {product.ProductNumber}");
+        Console.WriteLine("****************************");
+        
         try
         {
             if (!ModelState.IsValid)

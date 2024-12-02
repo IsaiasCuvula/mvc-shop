@@ -41,7 +41,6 @@ public class ProductService
             oldProduct.ExpirationDate = product.ExpirationDate.ToUniversalTime();
             oldProduct.Name = product.Name;
             oldProduct.Price = product.Price;
-            oldProduct.ProductNumber = product.ProductNumber;
             oldProduct.Stock = product.Stock;
             
             var updatedProduct = await _productRepository.UpdateAsync(oldProduct);
