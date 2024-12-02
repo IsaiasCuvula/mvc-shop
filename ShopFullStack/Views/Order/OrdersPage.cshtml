@@ -14,17 +14,21 @@
                 @foreach (var order in Model)
                 {
                     <div class="col-md-6 col-lg-4">
-                        <a href="@Url.Action("Details", "Order", new { id = order.Id })" class="text-decoration-none">
+                        <a asp-controller="Order" asp-action="Details" asp-route-id="@order.Id"
+                           class="text-decoration-none">
+
+                            <input type="hidden" name="orderId" value="@order.Id"/>
+
                             <div class="card shadow-sm text-start">
                                 <div class="card-body">
                                     <h5 class="card-title">Order #@order.Id</h5>
                                     <p class="card-text">
-                                        <strong>Customer ID:</strong> @order.CustomerId<br />
-                                        <strong>Total:</strong> $@order.Total<br />
-                                        <strong>Status:</strong> @order.Status.ToString()<br />
-                                        <strong>Payment status: </strong>@order.OrderPaymentStatus<br />
-                                        <strong>Returned status: </strong>@order.OrderPaymentStatus<br />
-                                        <strong>Shipping address:</strong> @order.ShippingAddress<br />
+                                        <strong>Customer ID:</strong> @order.CustomerId<br/>
+                                        <strong>Total:</strong> $@order.Total<br/>
+                                        <strong>Status:</strong> @order.Status.ToString()<br/>
+                                        <strong>Payment status: </strong>@order.OrderPaymentStatus<br/>
+                                        <strong>Returned status: </strong>@order.OrderPaymentStatus<br/>
+                                        <strong>Shipping address:</strong> @order.ShippingAddress<br/>
                                     </p>
                                     <p class="text-muted">
                                         <strong>Shipping at:</strong>
@@ -36,7 +40,7 @@
                                         {
                                             <span class="text-warning">Awaiting shipment</span>
                                         }
-                                        <br />
+                                        <br/>
                                         Created on: @order.CreatedAt.ToString("yyyy-MM-dd HH:mm")
                                     </p>
                                 </div>
