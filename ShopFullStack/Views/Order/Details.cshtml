@@ -1,0 +1,92 @@
+@using ShopFullStack.Utilities
+@model Order
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container mt-5">
+    <h1>Order details #@Model.Id</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4>Order Summary</h4>
+            <p><strong>Customer Id:</strong> @Model.CustomerId</p>
+            <p><strong>Shipping Address:</strong> @Model.ShippingAddress</p>
+            <p><strong>Total:</strong> $@Model.Total</p>
+            <p><strong>Status:</strong>
+                <span class="badge @GetOrderStatusClass(@Model.Status)">
+                    @Model.Status.ToString()
+                </span>
+            </p>
+            <p><strong>Created At:</strong> @Model.CreatedAt</p>
+
+            <!-- Update Order Status Form -->
+            @* <form method="post" action="@Url.Action("UpdateStatus", "Order", new { id = Model.Id })"> *@
+            @*     <div class="mb-3"> *@
+            @*         <label for="Status" class="form-label">Update Order Status</label> *@
+            @*         <select class="form-select" id="Status" name="status"> *@
+            @*             <option value="0" @(Model.Status == OrderStatus.Pending ? "selected" : "")>Pending</option> *@
+            @*             <option value="1" @(Model.Status == OrderStatus.Shipped ? "selected" : "")>Shipped</option> *@
+            @*             <option value="2" @(Model.Status == OrderStatus.Delivered ? "selected" : "")>Delivered</option> *@
+            @*         </select> *@
+            @*     </div> *@
+            @*     <button type="submit" class="btn btn-primary">Update Status</button> *@
+            @* </form> *@
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    <h4>Order Items</h4>
+    @if (Model.OrderItems.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Product</th>
+                    <th scope="col" class="text-center">Quantity</th>
+                    <th scope="col" class="text-end">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.OrderItems)
+                {
+                    @if (item.Product != null)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@Url.Content($"~/images/products/{item.Product.ImageUrl}")"
+                                     alt="@item.Product.Name"
+                                     class="img-thumbnail rounded"
+                                     style="width: 60px; height: 60px; object-fit: cover;">
+                            </td>
+                            <td>
+                                <span class="fw-semibold">@item.Product.Name</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-secondary p-2">@item.Quantity</span>
+                            </td>
+                            <td class="text-end fw-bold">@item.Total.ToString("C")</td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+
+@functions {
+    public string GetOrderStatusClass(OrderStatus status)
+    {
+        return status switch
+        {
+            OrderStatus.Pending => "bg-warning text-dark",
+            OrderStatus.Shipped => "bg-info text-white",
+            OrderStatus.Delivered => "bg-success text-white",
+            _ => "bg-secondary text-white"
+        };
+    }
+}
