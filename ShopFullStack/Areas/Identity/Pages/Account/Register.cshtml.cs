@@ -22,13 +22,16 @@ namespace ShopFullStack.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager
+            )
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -36,6 +39,7 @@ namespace ShopFullStack.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -114,6 +118,31 @@ namespace ShopFullStack.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    
+                    // Check if the Default role exists
+                    var defaultRole = await _roleManager.FindByNameAsync("User");
+                    if (defaultRole == null)
+                    {
+                        // Create the Default role if it does not exist
+                        defaultRole = new IdentityRole("User");
+                        var roleResult = await _roleManager.CreateAsync(defaultRole);
+                        if (!roleResult.Succeeded)
+                        {
+                            // Handle the failure (e.g., log the error, throw an exception, etc.)
+                            throw new Exception("Failed to create the Default role.");
+                        }
+                    }
+
+                    // Assign the Default role to the user
+                    var addRoleResult = await _userManager
+                        .AddToRoleAsync(user, defaultRole.Name ?? "User");
+                    
+                    if (!addRoleResult.Succeeded)
+                    {
+                        // Handle the failure (e.g., log the error, throw an exception, etc.)
+                        throw new Exception($"Failed to assign the Default role to the user. Errors: {string.Join(", ", addRoleResult.Errors.Select(e => e.Description))}");
+                    }
+                    //
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
