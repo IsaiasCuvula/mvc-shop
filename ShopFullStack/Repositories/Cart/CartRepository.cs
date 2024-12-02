@@ -14,9 +14,10 @@ public class CartRepository: ICartRepository
         _context = context;
     }
     
-    public async Task<Cart?> UpdateItemInCartAsync(long cartId, CartItem cartItem)
+    public async Task<Cart?> AddItemToCartAsync(
+        long cartId, CartItem cartItem, long customerId)
     {
-        var cart = await GetByIdAsync(cartId);
+        var cart = await GetByIdAsync(cartId,customerId);
         if (cart != null)
         {
             cart.CartItems.Add(cartItem);
@@ -25,20 +26,10 @@ public class CartRepository: ICartRepository
         return cart;
     }
 
-    public async Task<Cart?> AddItemToCartAsync(long cartId, CartItem cartItem)
+    public async Task<Cart?> RemoveItemFromCartAsync(
+        long cartId, long cartItemId,  long customerId)
     {
-        var cart = await GetByIdAsync(cartId);
-        if (cart != null)
-        {
-            cart.CartItems.Add(cartItem);
-            await _context.SaveChangesAsync();
-        }
-        return cart;
-    }
-
-    public async Task<Cart?> RemoveItemFromCartAsync(long cartId, long cartItemId)
-    {
-        var cart = await GetByIdAsync(cartId);
+        var cart = await GetByIdAsync(cartId, customerId);
         if (cart != null)
         {
             var item = cart.CartItems.FirstOrDefault(ci => ci.CartItemId == cartItemId);
@@ -52,12 +43,12 @@ public class CartRepository: ICartRepository
     }
 
 
-    public async Task<Cart?> GetByIdAsync(long cartId)
+    public async Task<Cart?> GetByIdAsync(long cartId, long customerId)
     {
         return await _context.Carts
             .Include(c => c.CartItems)
             .ThenInclude(ci => ci.Product)
-            .FirstOrDefaultAsync(c => c.Id == cartId);
+            .FirstOrDefaultAsync(c => c.Id == cartId && c.CustomerId == customerId);
     }
 
     public async Task<Cart?> GetByCustomerIdAsync(long customerId)

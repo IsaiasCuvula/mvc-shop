@@ -35,12 +35,13 @@ public class CartService
         }
     }
     
-    public async Task RemoveItemFromCart(long cartId, long cartItemId)
+    public async Task RemoveItemFromCart(
+        long cartId, long cartItemId,long customerId)
     {
         try
         {
              await _cartRepository
-                .RemoveItemFromCartAsync(cartId,cartItemId);
+                .RemoveItemFromCartAsync(cartId,cartItemId,customerId);
         }
         catch (Exception e)
         {
@@ -48,7 +49,8 @@ public class CartService
         }
     }
     
-    public async Task AddItemToCart(Cart cart, CartItem cartItem)
+    public async Task AddItemToCart(
+        Cart cart, CartItem cartItem,long customerId)
     {
         try
         {
@@ -61,14 +63,14 @@ public class CartService
             if (productInCart == null)
             {
                 await _cartRepository
-                    .AddItemToCartAsync(cartItem.CartId, cartItem);
+                    .AddItemToCartAsync(cartItem.CartId, cartItem, customerId);
             }
             else
             {
                 productInCart.Quantity += cartItem.Quantity;
                 productInCart.Total += cartItem.Total;
                 await _cartRepository.
-                    AddItemToCartAsync(cartItem.CartId, productInCart);
+                    AddItemToCartAsync(cartItem.CartId, productInCart, customerId);
             }
         }
         catch (Exception e)
@@ -96,12 +98,12 @@ public class CartService
         }
     }
    
-    public async Task<ApiResponse<Cart>> GetCartById(long id)
+    public async Task<ApiResponse<Cart>> GetCartById(long id, long customerId)
     {
         ApiResponse<Cart> response = new ApiResponse<Cart>();
         try
         {
-            var cart = await _cartRepository.GetByIdAsync(id);
+            var cart = await _cartRepository.GetByIdAsync(id, customerId);
             if (cart == null)
             {
                 response.Message = "Cart not found";
@@ -120,11 +122,11 @@ public class CartService
         }
     }
 
-    public async Task  ClearCartById(long id)
+    public async Task  ClearCartById(long id, long customerId)
     {
         try
         {
-            var cart = await _cartRepository.GetByIdAsync(id);
+            var cart = await _cartRepository.GetByIdAsync(id, customerId);
             
             if (cart != null)
             {

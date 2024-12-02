@@ -29,7 +29,16 @@ public class CartController: Controller
     [HttpPost]
     public async Task<IActionResult> Checkout(long cartId)
     {
-        var response = await _cartService.GetCartById(cartId);
+        var customer = await GetCurrentCustomer();
+
+        if (customer == null)
+        {
+            return RedirectToAction("CartPage", "Cart");
+        }
+        
+        var customerId = customer.Id;
+        
+        var response = await _cartService.GetCartById(cartId, customerId);
         var cart = response.Data;
         if (cart == null)
         {
@@ -52,7 +61,7 @@ public class CartController: Controller
             }
             await _orderService.CreateOrder(order);
             //After placing order clear the cart
-            await _cartService.ClearCartById(cartId);
+            await _cartService.ClearCartById(cartId, customerId);
             
             return RedirectToAction("OrdersPage", "Order");
         }
@@ -68,12 +77,16 @@ public class CartController: Controller
         }
         
         var customer = await GetCurrentCustomer();
+      
         if (customer == null)
         {
             return RedirectToAction("UpdateCustomer", "Customer");
         }
+        
+        var customerId = customer.Id;
+        
         var cartByCustomerId = await _cartService
-            .GetCartByCustomerId(customer.Id);
+            .GetCartByCustomerId(customerId);
         
         CartItem cartItem = new CartItem();
         cartItem.ProductId = productId;
@@ -88,12 +101,12 @@ public class CartController: Controller
             var savedCart = newCartResponse.Data;
             if (savedCart != null)
             {
-               await _cartService.AddItemToCart(savedCart, cartItem);
+               await _cartService.AddItemToCart(savedCart, cartItem, customerId);
             }
         }
         else
         {
-            await _cartService.AddItemToCart(cartByCustomerId.Data, cartItem);
+            await _cartService.AddItemToCart(cartByCustomerId.Data, cartItem, customerId);
         }
         return RedirectToAction("CartPage", "Cart");
     }
@@ -106,13 +119,15 @@ public class CartController: Controller
         {
             return RedirectToAction("CartPage", "Cart");
         }
+        var customerId = customer.Id;
+        
         var cartByCustomerId = await _cartService
-            .GetCartByCustomerId(customer.Id);
+            .GetCartByCustomerId(customerId);
         
         if (cartByCustomerId.Data != null)
         {
            await _cartService
-               .RemoveItemFromCart(cartByCustomerId.Data.Id, cartItemId);
+               .RemoveItemFromCart(cartByCustomerId.Data.Id, cartItemId, customerId);
         }
         return RedirectToAction("CartPage", "Cart");
     }
