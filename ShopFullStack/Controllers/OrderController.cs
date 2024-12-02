@@ -27,8 +27,18 @@ public class OrderController: Controller
     [HttpGet]
     public async Task<IActionResult>  OrdersPage()
     {  
-        var response = await _orderService.GetAllOrders();
-        return  View(response.Data ?? new List<Order>());
+        var user = _userManager.GetUserAsync(User).Result;
+        var email = user == null?  HttpContext.Session.GetString("Email"): user.Email;
+        var customerResponse = await  _customerService.GetCustomerByEmail(email);
+        var customer = customerResponse.Data;
+        if (customer != null){
+            var response = await _orderService.GetAllOrders(customer.Id);
+            return View(response.Data ?? new List<Order>());
+        }
+        else
+        {
+            return View(new List<Order>());
+        }
     }
     //
     // [HttpGet("unpaid")]

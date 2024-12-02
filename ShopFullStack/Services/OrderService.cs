@@ -22,12 +22,12 @@ public class OrderService
         _customerRepository = customerRepository;
     }
     
-    public async Task<ApiResponse<List<Order>>> GetAllOrders()
+    public async Task<ApiResponse<List<Order>>> GetAllOrders(long customerId)
     {
         ApiResponse<List<Order>> response = new ApiResponse<List<Order>>();
         try
         {
-          var orders = await _orderRepository.GetAllAsync();
+          var orders = await _orderRepository.GetAllAsync(customerId);
           response.Data = orders;
           response.Message = orders.Count == 0 ? "There is no order created yet":"Orders successfully retrieved";
           return response;

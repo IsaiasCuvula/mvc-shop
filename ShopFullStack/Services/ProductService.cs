@@ -89,7 +89,7 @@ public class ProductService
     
         try
         {
-            var orders = await _orderRepository.GetAllAsync();
+            var orders = await _orderRepository.GetMostPopularAsync();
             foreach (var order in orders)
             {
                 Console.WriteLine($"OrderItems: {order.OrderItems.Count}");

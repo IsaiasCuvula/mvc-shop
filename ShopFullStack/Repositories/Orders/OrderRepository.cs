@@ -19,9 +19,10 @@ public class OrderRepository: IOrderRepository
         return await _context.Orders.FirstOrDefaultAsync(c=> c.Id==id);
     }
 
-    public async Task<List<Order>> GetAllAsync()
+    public async Task<List<Order>> GetAllAsync(long customerId)
     {
         return await _context.Orders
+            .Where(o => o.CustomerId == customerId)
             .Include(o => o.Customer)      
             .Include(o => o.OrderItems) 
             .OrderByDescending(o=>o.CreatedAt)
@@ -46,6 +47,15 @@ public class OrderRepository: IOrderRepository
     {
         _context.Orders.Remove(order);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<Order>> GetMostPopularAsync()
+    {
+        return await _context.Orders
+            .Include(o => o.Customer)      
+            .Include(o => o.OrderItems) 
+            .OrderByDescending(o=>o.CreatedAt)
+            .ToListAsync();
     }
 
     public async Task<List<Order>> GetAllUnpaidOrdersAsync()
