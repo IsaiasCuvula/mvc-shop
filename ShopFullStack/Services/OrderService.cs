@@ -22,12 +22,12 @@ public class OrderService
         _customerRepository = customerRepository;
     }
     
-    public async Task<ApiResponse<Order>> GetOrderById(long id)
+    public async Task<ApiResponse<Order>> GetOrderById(long id, long customerId)
     {
         ApiResponse<Order> response = new ApiResponse<Order>();
         try
         {
-            var order = await _orderRepository.GetByIdAsync(id);
+            var order = await _orderRepository.GetByIdAsync(id, customerId);
             if (order == null)
             {
                 response.Message = "Order not found";

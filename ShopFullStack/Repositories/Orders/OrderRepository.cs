@@ -14,9 +14,13 @@ public class OrderRepository: IOrderRepository
         _context = context;
     }
     
-    public async Task<Order?> GetByIdAsync(long id)
+    public async Task<Order?> GetByIdAsync(long id, long customerId)
     {
-        return await _context.Orders.FirstOrDefaultAsync(c=> c.Id==id);
+        return await _context.Orders
+            .Include(o => o.Customer)      
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product)
+            .FirstOrDefaultAsync(c=> c.Id==id && c.CustomerId==customerId);
     }
 
     public async Task<List<Order>> GetAllAsync(long customerId)
