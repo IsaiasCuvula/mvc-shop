@@ -59,6 +59,7 @@ public class ProductRepository: IProductRepository
                     WHERE p.expiration_date > {0}";
         
         Console.WriteLine("**********************************");
+        Console.WriteLine("GetProductsExpiringInNext3MonthsAsync");
         Console.WriteLine($"now: {now}");
         Console.WriteLine($"Date after 3 months: {dateAfter3Months}");
         Console.WriteLine("**********************************");

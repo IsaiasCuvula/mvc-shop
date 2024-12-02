@@ -110,10 +110,10 @@
             {
                 @foreach (var customer in Model.GetAllCustomerShoppedLasWeek)
                 {
-                     <li class="list-group-item">
-                         <strong>@customer.Name</strong>
-                         <span class="text-warning"> - @customer.Email</span>
-                     </li>
+                    <li class="list-group-item">
+                        <strong>@customer.Name</strong>
+                        <span class="text-warning"> - @customer.Email</span>
+                    </li>
                 }
             }
             else
@@ -122,7 +122,31 @@
             }
         </ul>
     </div>
-
+    
+    <!-- Products which have an expiration date of more than 3 months -->
+    <div class="mb-5">
+        <h2 class="text-primary">Products which have an expiration date of more than 3 months</h2>
+        <ul class="list-group">
+            @if (Model.ProductsExpiringInNext3Months.Any())
+            {
+                @foreach (var product in Model.ExpiringSoonProducts)
+                {
+                    <a asp-controller="Dashboard" asp-action="ProductDetailsAdmin" asp-route-id="@product.Id"
+                       class="text-decoration-none">
+                        <li class="list-group-item">
+                            <strong>@product.Name</strong> 
+                            <span class="text-warning">Expires on: @product.ExpirationDate.ToShortDateString()</span>
+                        </li>
+                    </a>
+                }
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No product will expire in the next 3 months.</li>
+            }
+        </ul>
+    </div>
+    
     <!-- Pie Chart Section -->
     <div class="dashboard-section">
         <h2>Product Sales</h2>
