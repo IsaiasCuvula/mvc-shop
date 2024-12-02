@@ -103,9 +103,8 @@ public class CustomerController: Controller
         }
         else
         {
-            ApiResponse<Customer> response = new ApiResponse<Customer>();
             //If user does not have all info, create a customer
-            response = customer.Id == 0 ? 
+            var response = customer.Id == 0 ? 
                 await _customerService.CreateCustomer(customer) : 
                 await _customerService.UpdateCustomer(customer);
             
