@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopFullStack.Data;
+using ShopFullStack.Models;
 using ShopFullStack.Repositories;
 using ShopFullStack.Repositories.Orders;
 using ShopFullStack.Repositories.Product;
@@ -45,8 +46,17 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()  
     .AddEntityFrameworkStores<AppDbContext>();
 
+
+builder.Services.AddScoped<StripeApiKeys>();
+
+
+builder.Services.Configure<StripeApiKeys>(
+    builder.Configuration.GetSection("Stripe")
+);
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();  
+
 
 var app = builder.Build();
 
