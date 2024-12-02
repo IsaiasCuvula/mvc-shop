@@ -37,7 +37,9 @@ public class ProductController: Controller
     {
         try
         {
-            await _productService.DeleteProductById(id);
+            if(User.IsInRole("Admin")){ 
+                await _productService.DeleteProductById(id);
+            }
             return RedirectToAction("ProductsPage");
         }
         catch (Exception e)
@@ -56,45 +58,51 @@ public class ProductController: Controller
         Console.WriteLine("****************************");
         Console.WriteLine($"product number: {product.ProductNumber}");
         Console.WriteLine("****************************");
-        
-        try
-        {
-            if (!ModelState.IsValid)
+        if(User.IsInRole("Admin"))
+        { 
+            try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(new Product());
+                }
+                
+                if (product.ImageFile != null)
+                {
+                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + product.ImageFile.FileName;
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await product.ImageFile.CopyToAsync(fileStream);
+                    }
+                    product.ImageUrl = uniqueFileName;
+                }
+                
+                //Add product 
+                if (product.Id == 0)
+                {
+                    await _productService.CreateProduct(product);
+                }
+                else
+                {
+                    // Update product
+                    await _productService.UpdateProduct(product);
+                }
+                
+                return RedirectToAction("ProductsPage", "Product");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("****************************");
+                Console.WriteLine($"Error: {e.Message}");
+                Console.WriteLine("****************************");
                 return View(new Product());
             }
-            
-            if (product.ImageFile != null)
-            {
-                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + product.ImageFile.FileName;
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await product.ImageFile.CopyToAsync(fileStream);
-                }
-                product.ImageUrl = uniqueFileName;
-            }
-            
-            //Add product 
-            if (product.Id == 0)
-            {
-                await _productService.CreateProduct(product);
-            }
-            else
-            {
-                // Update product
-                await _productService.UpdateProduct(product);
-            }
-            
-            return RedirectToAction("ProductsPage", "Product");
         }
-        catch (Exception e)
+        else
         {
-            Console.WriteLine("****************************");
-            Console.WriteLine($"Error: {e.Message}");
-            Console.WriteLine("****************************");
-            return View(new Product());
+            return RedirectToAction("ProductsPage", "Product");
         }
     }
     

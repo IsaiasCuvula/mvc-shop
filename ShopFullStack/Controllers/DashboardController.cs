@@ -32,31 +32,34 @@ public class DashboardController: Controller
     
     public async Task<IActionResult> Dashboard()
     {
-        var popularProducts = await _productService.GetMostPopularProducts();
-        var unpaidOrders = await _orderService.GetAllUnpaidOrders();
-        var returnedOrders = await _orderService.GetAllReturnedOrders();
-        var products = await _productService.GetAllProducts();
-        var expiredProducts = await _productService.GetExpiredProducts();
-        var expiringSoonProducts = await _productService.GetProductsExpiringInNext24Hours();
-        var customerShoppedLasWeek = await _customerService.GetAllCustomerShoppedLasWeek();
-        var productsExpiringInNext3Months = await _productService.GetProductsExpiringInNext3Months();
-        var mostPopularProducts = await _productService.GetMostPopularProducts();
-        var topCustomer = await _customerService.GetTopCustomerByTurnover();
-        //
-        var viewModel = new DashboardViewModel
-        {
-            PopularProducts = popularProducts,
-            UnpaidOrders = unpaidOrders.Data ?? [],
-            ReturnedOrders = returnedOrders.Data ?? [],
-            Products = products,
-            ExpiredProducts = expiredProducts.Data ?? [],
-            ExpiringSoonProducts = expiringSoonProducts.Data ?? [],
-            GetAllCustomerShoppedLasWeek = customerShoppedLasWeek.Data ?? [],
-            ProductsExpiringInNext3Months = productsExpiringInNext3Months.Data ?? [],
-            MostPopularProducts = mostPopularProducts,
-            GetTopCustomerByTurnover = topCustomer.Data,
-        };
-
+        var viewModel = new DashboardViewModel();
+        if(User.IsInRole("Admin"))
+        { 
+            var popularProducts = await _productService.GetMostPopularProducts();
+            var unpaidOrders = await _orderService.GetAllUnpaidOrders();
+            var returnedOrders = await _orderService.GetAllReturnedOrders();
+            var products = await _productService.GetAllProducts();
+            var expiredProducts = await _productService.GetExpiredProducts();
+            var expiringSoonProducts = await _productService.GetProductsExpiringInNext24Hours();
+            var customerShoppedLasWeek = await _customerService.GetAllCustomerShoppedLasWeek();
+            var productsExpiringInNext3Months = await _productService.GetProductsExpiringInNext3Months();
+            var mostPopularProducts = await _productService.GetMostPopularProducts();
+            var topCustomer = await _customerService.GetTopCustomerByTurnover();
+            //
+            viewModel = new DashboardViewModel
+            {
+                PopularProducts = popularProducts,
+                UnpaidOrders = unpaidOrders.Data ?? [],
+                ReturnedOrders = returnedOrders.Data ?? [],
+                Products = products,
+                ExpiredProducts = expiredProducts.Data ?? [],
+                ExpiringSoonProducts = expiringSoonProducts.Data ?? [],
+                GetAllCustomerShoppedLasWeek = customerShoppedLasWeek.Data ?? [],
+                ProductsExpiringInNext3Months = productsExpiringInNext3Months.Data ?? [],
+                MostPopularProducts = mostPopularProducts,
+                GetTopCustomerByTurnover = topCustomer.Data,
+            };
+        }
         return View(viewModel);
     }
     
@@ -65,7 +68,7 @@ public class DashboardController: Controller
         var startDate = dateFilter.StartDate;
         var endDate = dateFilter.EndDate;
 
-        var pieChartData = await GetPieChartData(startDate, endDate);
+        var pieChartData =  User.IsInRole("Admin") ? await GetPieChartData(startDate, endDate) : [];
 
         return View(new ProductSalesViewModel
         {
