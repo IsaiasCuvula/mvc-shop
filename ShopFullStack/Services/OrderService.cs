@@ -22,6 +22,30 @@ public class OrderService
         _customerRepository = customerRepository;
     }
     
+    public async Task<ApiResponse<Order>> GetOrderById(long id)
+    {
+        ApiResponse<Order> response = new ApiResponse<Order>();
+        try
+        {
+            var order = await _orderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                response.Message = "Order not found";
+                return response;
+            }
+            response.Data = order;
+            response.Message = "Order successfully retrieved";
+            return response;
+        }
+        catch (Exception e)
+        {
+            response.Message = e.Message;
+            response.Status = false;
+            Console.WriteLine($"Failed to get order with id: {id} - {e}");
+            return response;
+        }
+    }
+    
     public async Task<ApiResponse<List<Order>>> GetAllOrders(long customerId)
     {
         ApiResponse<List<Order>> response = new ApiResponse<List<Order>>();
@@ -190,28 +214,5 @@ public class OrderService
     //     }
     // }
     //
-    // public async Task<ApiResponse<Order>> GetOrderById(long id)
-    // {
-    //     ApiResponse<Order> response = new ApiResponse<Order>();
-    //     try
-    //     {
-    //         var order = await _orderRepository.GetByIdAsync(id);
-    //         if (order == null)
-    //         {
-    //             response.Message = "Order not found";
-    //             return response;
-    //         }
-    //         response.Data = order;
-    //         response.Message = "Order successfully retrieved";
-    //         return response;
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         response.Message = e.Message;
-    //         response.Status = false;
-    //         Console.WriteLine($"Failed to get order with id: {id} - {e}");
-    //         return response;
-    //     }
-    // }
-    //
+    
 }
