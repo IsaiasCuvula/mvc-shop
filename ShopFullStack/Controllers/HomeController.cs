@@ -7,21 +7,17 @@ namespace ShopFullStack.Controllers;
 
 public class HomeController: Controller
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly ProductService _productService;
 
     public HomeController(ProductService productService, ILogger<HomeController> logger)
     {
         _productService = productService;
-        _logger = logger;
-
     }
     
 
     public async Task<IActionResult> Index()
     {
-        //var products = await _productService.GetMostPopularProducts();
-        var products = await _productService.GetAllProducts();
+        var products = await _productService.GetMostPopularProducts();
         return View(products);
     }
 
