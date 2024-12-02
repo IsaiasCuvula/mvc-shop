@@ -15,7 +15,7 @@
         <div class="row">
             @foreach (Product prod in Model)
             {
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 col-lg-4 mb-3">
                     <form asp-controller="Product" method="post">
                         <div class="card" style="width: 18rem;">
                             <img class="card-img-top fixed-image-height" src="@Url.Content("~/images/" + prod.ImageUrl)"
