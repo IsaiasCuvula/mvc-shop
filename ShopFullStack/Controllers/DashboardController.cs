@@ -39,7 +39,8 @@ public class DashboardController: Controller
         var expiredProducts = await _productService.GetExpiredProducts();
         var expiringSoonProducts = await _productService.GetProductsExpiringInNext24Hours();
         var customerShoppedLasWeek = await _customerService.GetAllCustomerShoppedLasWeek();
-
+        var productsExpiringInNext3Months = await _productService.GetProductsExpiringInNext3Months();
+        //
         var viewModel = new DashboardViewModel
         {
             PopularProducts = popularProducts,
@@ -49,6 +50,7 @@ public class DashboardController: Controller
             ExpiredProducts = expiredProducts.Data ?? [],
             ExpiringSoonProducts = expiringSoonProducts.Data ?? [],
             GetAllCustomerShoppedLasWeek = customerShoppedLasWeek.Data ?? [],
+            ProductsExpiringInNext3Months = productsExpiringInNext3Months.Data ?? [],
         };
 
         return View(viewModel);

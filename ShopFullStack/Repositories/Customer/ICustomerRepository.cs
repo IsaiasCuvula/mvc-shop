@@ -11,5 +11,4 @@ public interface ICustomerRepository
     Task<Customer> UpdateAsync(Customer customer);
     Task DeleteAsync(Customer customer);
     Task<List<Customer>> GetAllCustomerShoppedLasWeekAsync();
-    Task<Customer?> GetByNumberAsync(long customerNumber);
 }

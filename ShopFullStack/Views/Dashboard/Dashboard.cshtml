@@ -6,50 +6,23 @@
 <div class="container my-5">
     <h1 class="text-center mb-4">Dashboard</h1>
 
-    <!-- Unpaid Orders Section -->
+    <!-- Customer shopped last week -->
     <div class="mb-5">
-        <h2 class="text-primary">Unpaid Orders</h2>
+        <h2 class="text-primary">Customers that Shopped last week</h2>
         <ul class="list-group">
-            @if (Model.UnpaidOrders.Any())
+            @if (Model.GetAllCustomerShoppedLasWeek.Any())
             {
-                @foreach (var order in Model.UnpaidOrders)
+                @foreach (var customer in Model.GetAllCustomerShoppedLasWeek)
                 {
-                    <a asp-controller="Order" asp-action="Details" asp-route-id="@order.Id"
-                       class="text-decoration-none">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Order ID: @order.Id 
-                            <span class="badge bg-warning text-dark">@order.Total.ToString("C")</span>
-                        </li>
-                    </a>
+                    <li class="list-group-item">
+                        <strong>@customer.Name</strong>
+                        <span class="text-warning"> - @customer.Email</span>
+                    </li>
                 }
             }
             else
             {
-                <li class="list-group-item text-muted">No unpaid orders found.</li>
-            }
-        </ul>
-    </div>
-
-    <!-- Returned Orders Section -->
-    <div class="mb-5">
-        <h2 class="text-primary">Returned Orders</h2>
-        <ul class="list-group">
-            @if (Model.ReturnedOrders.Any())
-            {
-                @foreach (var order in Model.ReturnedOrders)
-                {
-                    <a asp-controller="Order" asp-action="Details" asp-route-id="@order.Id"
-                       class="text-decoration-none">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Order ID: @order.Id 
-                            <span class="badge bg-danger text-white">@order.Total.ToString("C")</span>
-                        </li>
-                    </a>
-                }
-            }
-            else
-            {
-                <li class="list-group-item text-muted">No returned orders found.</li>
+                <li class="list-group-item text-muted">No Customer who shop last week.</li>
             }
         </ul>
     </div>
@@ -80,7 +53,7 @@
 
     <!-- Products Expiring Soon Section -->
     <div class="mb-5">
-        <h2 class="text-primary">Products Expiring Soon</h2>
+        <h2 class="text-primary">Products Expiring Soon (next 24h)</h2>
         <ul class="list-group">
             @if (Model.ExpiringSoonProducts.Any())
             {
@@ -102,27 +75,80 @@
         </ul>
     </div>
 
-    <!-- Customer shopped last week -->
+   
+    
+    <!-- Products which have an expiration date of more than 3 months -->
     <div class="mb-5">
-        <h2 class="text-primary">Customers that Shopped last week</h2>
+        <h2 class="text-primary">Products which have an expiration date of more than 3 months</h2>
         <ul class="list-group">
-            @if (Model.GetAllCustomerShoppedLasWeek.Any())
+            @if (Model.ProductsExpiringInNext3Months.Any())
             {
-                @foreach (var customer in Model.GetAllCustomerShoppedLasWeek)
+                @foreach (var product in Model.ExpiringSoonProducts)
                 {
-                     <li class="list-group-item">
-                         <strong>@customer.Name</strong>
-                         <span class="text-warning"> - @customer.Email</span>
-                     </li>
+                    <a asp-controller="Dashboard" asp-action="ProductDetailsAdmin" asp-route-id="@product.Id"
+                       class="text-decoration-none">
+                        <li class="list-group-item">
+                            <strong>@product.Name</strong> 
+                            <span class="text-warning">Expires on: @product.ExpirationDate.ToShortDateString()</span>
+                        </li>
+                    </a>
                 }
             }
             else
             {
-                <li class="list-group-item text-muted">No Customer who shop last week.</li>
+                <li class="list-group-item text-muted">No product will expire in the next 3 months.</li>
             }
         </ul>
     </div>
 
+    <!-- Unpaid Orders Section -->
+    <div class="mb-5">
+        <h2 class="text-primary">Unpaid Orders</h2>
+        <ul class="list-group">
+            @if (Model.UnpaidOrders.Any())
+            {
+                @foreach (var order in Model.UnpaidOrders)
+                {
+                    <a asp-controller="Order" asp-action="Details" asp-route-id="@order.Id"
+                       class="text-decoration-none">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Order ID: @order.Id
+                            <span class="badge bg-warning text-dark">@order.Total.ToString("C")</span>
+                        </li>
+                    </a>
+                }
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No unpaid orders found.</li>
+            }
+        </ul>
+    </div>
+
+    <!-- Returned Orders Section -->
+    <div class="mb-5">
+        <h2 class="text-primary">Returned Orders</h2>
+        <ul class="list-group">
+            @if (Model.ReturnedOrders.Any())
+            {
+                @foreach (var order in Model.ReturnedOrders)
+                {
+                    <a asp-controller="Order" asp-action="Details" asp-route-id="@order.Id"
+                       class="text-decoration-none">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Order ID: @order.Id
+                            <span class="badge bg-danger text-white">@order.Total.ToString("C")</span>
+                        </li>
+                    </a>
+                }
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No returned orders found.</li>
+            }
+        </ul>
+    </div>
+    
     <!-- Pie Chart Section -->
     <div class="dashboard-section">
         <h2>Product Sales</h2>
