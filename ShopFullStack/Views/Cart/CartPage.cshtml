@@ -17,42 +17,53 @@
                     <tr>
                         <th scope="col">Image</th>
                         <th scope="col">Product</th>
+                        <th scope="col">Price</th>
                         <th scope="col" class="text-center">Quantity</th>
                         <th scope="col" class="text-end">Total</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.CartItems)
+                @foreach (var item in Model.CartItems)
+                {
+                    @if (item.Product != null)
                     {
-                        @if (item.Product != null)
-                        {
-                            <tr>
-                                <td>
-                                    <img src="@Url.Content($"~/images/products/{item.Product.ImageUrl}")"
-                                         alt="@item.Product.Name"
-                                         class="img-thumbnail rounded"
-                                         style="width: 60px; height: 60px; object-fit: cover;">
-                                </td>
-                                <td>
-                                    <span class="fw-semibold">@item.Product.Name</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-secondary p-2">@item.Quantity</span>
-                                </td>
-                                <td class="text-end fw-bold">@item.Total.ToString("C")</td>
-                                <td class="text-center">
-                                    <form asp-controller="Cart" asp-action="RemoveItem" method="post" style="display:inline;">
-                                        <input type="hidden" name="cartItemId" value="@item.CartItemId" />
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="bi bi-trash-fill"></i> Delete
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
+                        <tr>
+                            <td>
+                                <img src="@Url.Content($"~/images/products/{item.Product.ImageUrl}")"
+                                     alt="@item.Product.Name"
+                                     class="img-thumbnail rounded"
+                                     style="width: 60px; height: 60px; object-fit: cover;">
+                            </td>
+                            <td>
+                                <span class="fw-semibold">@item.Product.Name</span>
+                            </td>
+                            <td>
+                                <span class="fw-semibold">$@item.Product.Price</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-secondary p-2">@item.Quantity</span>
+                            </td>
+                            <td class="text-end fw-bold">@item.Total.ToString("C")</td>
+                            <td class="text-center">
+                                <form asp-controller="Cart" asp-action="RemoveItem" method="post" style="display:inline;">
+                                    <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash-fill"></i> Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                     }
+                }
                 </tbody>
+                <tfoot>
+                <tr class="fw-bold">
+                    <td colspan="4" class="text-end">Total:</td>
+                    <td class="text-end">@Model.CartItems.Sum(item => item.Total).ToString("C")</td>
+                    <td></td>
+                </tr>
+                </tfoot>
             </table>
         </div>
 
