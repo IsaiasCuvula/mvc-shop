@@ -42,10 +42,6 @@ public class ProductController: Controller
         }
         catch (Exception e)
         {
-            Console.WriteLine("****************************");
-            Console.WriteLine($"Error: {e.Message}");
-            Console.WriteLine("****************************");
-            
             return RedirectToAction("ProductsPage");
         }
     } 
@@ -61,11 +57,6 @@ public class ProductController: Controller
         {
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("****************************");
-                Console.WriteLine(
-                    $"Error: {ModelState.Values.SelectMany(v => v.Errors).FirstOrDefault()?.ErrorMessage}"
-                );
-                Console.WriteLine("****************************");
                 return View(new Product());
             }
             
