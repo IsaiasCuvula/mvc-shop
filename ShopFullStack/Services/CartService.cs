@@ -35,24 +35,16 @@ public class CartService
         }
     }
     
-    public async Task<ApiResponse<Cart>> RemoveItemFromCart(long cartId, long cartItemId)
+    public async Task RemoveItemFromCart(long cartId, long cartItemId)
     {
-        ApiResponse<Cart> response = new ApiResponse<Cart>();
         try
         {
-            var result=   await _cartRepository
+             await _cartRepository
                 .RemoveItemFromCartAsync(cartId,cartItemId);
-            
-            response.Data = result;
-            response.Message = "Item removed successfully from cart";
-            return response;
         }
         catch (Exception e)
         {
-            response.Message = e.Message;
-            response.Status = false;
             Console.WriteLine($"Failed to remove item from cart - {e}");
-            return response;
         }
     }
     
@@ -128,32 +120,22 @@ public class CartService
         }
     }
 
-    public async Task<ApiResponse<Cart>>  ClearCartById(long id)
+    public async Task  ClearCartById(long id)
     {
-        ApiResponse<Cart> response = new ApiResponse<Cart>();
         try
         {
             var cart = await _cartRepository.GetByIdAsync(id);
             
-            if (cart == null)
+            if (cart != null)
             {
-                response.Message = "Cart not found";
-                return response;
+                await UpdateProductStockQty(cart);
+                cart.CartItems.Clear();
+                await _cartRepository.ClearCartAsync(cart);
             }
-            await UpdateProductStockQty(cart);
-            cart.CartItems.Clear();
-            await _cartRepository.ClearCartAsync(cart);
-           
-            response.Data = null;
-            response.Message = "Cart deleted successfully";
-            return response;
         }
         catch (Exception e)
         {
-            response.Message = e.Message;
-            response.Status = false;
             Console.WriteLine($"Failed to get cartItem with id: {id} - {e}");
-            return response;
         }
     }
     
