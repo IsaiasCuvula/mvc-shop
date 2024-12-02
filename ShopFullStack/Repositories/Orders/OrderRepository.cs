@@ -33,6 +33,15 @@ public class OrderRepository: IOrderRepository
             .ToListAsync();
     }
 
+    public async Task<List<Order>> AdminGetAllAsync()
+    {
+        return await _context.Orders
+            .Include(o => o.Customer)      
+            .Include(o => o.OrderItems) 
+            .OrderByDescending(o=>o.CreatedAt)
+            .ToListAsync();
+    }
+
     public async Task<Order> AddAsync(Order order)
     {
         await _context.Orders.AddAsync(order);
@@ -72,7 +81,7 @@ public class OrderRepository: IOrderRepository
     public async Task<List<Order>> GetAllReturnedOrdersAsync()
     {
         return await _context.Orders
-            .FromSql($"SELECT * FROM Orders WHERE return_status = {ReturnStatus.Returned}")
+            .FromSql($"SELECT * FROM Orders WHERE order_returned_status = {ReturnStatus.Returned}")
             .ToListAsync();
     }
 }

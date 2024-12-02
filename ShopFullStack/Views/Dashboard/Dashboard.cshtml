@@ -1,0 +1,118 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container my-5">
+    <h1 class="text-center mb-4">Dashboard</h1>
+
+    <!-- Unpaid Orders Section -->
+    <div class="mb-5">
+        <h2 class="text-primary">Unpaid Orders</h2>
+        <ul class="list-group">
+            @if (Model.UnpaidOrders.Any())
+            {
+                @foreach (var order in Model.UnpaidOrders)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Order ID: @order.Id 
+                        <span class="badge bg-warning text-dark">@order.Total.ToString("C")</span>
+                    </li>
+                }
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No unpaid orders found.</li>
+            }
+        </ul>
+    </div>
+
+    <!-- Returned Orders Section -->
+    <div class="mb-5">
+        <h2 class="text-primary">Returned Orders</h2>
+        <ul class="list-group">
+            @if (Model.ReturnedOrders.Any())
+            {
+                @foreach (var order in Model.ReturnedOrders)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Order ID: @order.Id 
+                        <span class="badge bg-danger text-white">@order.Total.ToString("C")</span>
+                    </li>
+                }
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No returned orders found.</li>
+            }
+        </ul>
+    </div>
+
+    <!-- Expired Products Section -->
+    <div class="mb-5">
+        <h2 class="text-primary">Expired Products</h2>
+        <ul class="list-group">
+            @if (Model.ExpiredProducts.Any())
+            {
+                @foreach (var product in Model.ExpiredProducts)
+                {
+                    <li class="list-group-item">
+                        <strong>@product.Name</strong> 
+                        <span class="text-danger">Expired on: @product.ExpirationDate.ToShortDateString()</span>
+                    </li>
+                }
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No expired products found.</li>
+            }
+        </ul>
+    </div>
+
+    <!-- Products Expiring Soon Section -->
+    <div class="mb-5">
+        <h2 class="text-primary">Products Expiring Soon</h2>
+        <ul class="list-group">
+            @if (Model.ExpiringSoonProducts.Any())
+            {
+                @foreach (var product in Model.ExpiringSoonProducts)
+                {
+                    <li class="list-group-item">
+                        <strong>@product.Name</strong> 
+                        <span class="text-warning">Expires on: @product.ExpirationDate.ToShortDateString()</span>
+                    </li>
+                }
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No products expiring soon.</li>
+            }
+        </ul>
+    </div>
+
+    <!-- Pie Chart Section -->
+    <div class="mb-5">
+        <h2 class="text-primary text-center">Product Sales Chart</h2>
+        <div class="d-flex justify-content-center">
+            <canvas id="pieChart" style="max-width: 400px;"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('pieChart').getContext('2d');
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.PieChartData.Select(d => d.Label))),
+                datasets: [{
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.PieChartData.Select(d => d.Value))),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                }]
+            }
+        });
+    </script>
+}
+

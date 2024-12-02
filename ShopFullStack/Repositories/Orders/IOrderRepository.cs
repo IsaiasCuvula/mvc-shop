@@ -6,6 +6,7 @@ public interface IOrderRepository
 {
     Task<Order?> GetByIdAsync(long id, long customerId);
     Task<List<Order>> GetAllAsync(long customerId);
+    Task<List<Order>> AdminGetAllAsync();
     Task<Order> AddAsync(Order order);
     Task<Order> UpdateAsync(Order order);
     Task DeleteAsync(Order order);
