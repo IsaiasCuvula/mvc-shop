@@ -78,12 +78,10 @@ public class DashboardController: Controller
     {
         var orders = await _orderService.AdminGetAllOrders();
     
-       
         var filteredOrders = orders.Data == null? []: orders.Data 
             .Where(o => (!startDate.HasValue || o.CreatedAt >= startDate) &&
                         (!endDate.HasValue || o.CreatedAt <= endDate))
             .ToList();
-
    
         return filteredOrders
             .SelectMany(o => o.OrderItems)
