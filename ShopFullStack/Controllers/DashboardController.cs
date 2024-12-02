@@ -16,6 +16,13 @@ public class DashboardController: Controller
         _productService = productService;
     }
     
+    [HttpGet]
+    public async Task<IActionResult> ProductDetailsAdmin(long id)
+    {
+        var response = await _productService.GetProductById(id);
+        return View(response.Data);
+    }
+    
     
     public async Task<IActionResult> Dashboard()
     {
@@ -27,16 +34,6 @@ public class DashboardController: Controller
         var expiringSoonProducts = await _productService.GetProductsExpiringInNext24Hours();
 
         var pieChartData = await GetPieChartData();
-        
-        
-        Console.WriteLine("*********************************");
-        Console.WriteLine($"popularProducts: {popularProducts.Count}");
-        Console.WriteLine($"unpaidOrders: {unpaidOrders.Message}");
-        Console.WriteLine($"returnedOrders: {returnedOrders.Message}");
-        Console.WriteLine($"products: {products.Count}");
-        Console.WriteLine($"expiredProducts: {expiredProducts.Message}");
-        Console.WriteLine($"expiringSoonProducts: {expiringSoonProducts.Message}");
-        Console.WriteLine("*********************************");
 
         var viewModel = new DashboardViewModel
         {
