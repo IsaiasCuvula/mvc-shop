@@ -46,24 +46,6 @@ public class OrderController: Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UpdateStatus(long id, OrderStatus status)
-    {
-        // var response = await _orderService.GetOrderById(orderId);
-        // if (order == null)
-        // {
-        //     return NotFound();
-        // }
-        //
-        // order.Status = status;
-        // _context.Update(order);
-        // await _context.SaveChangesAsync();
-
-        //return RedirectToAction(nameof(Details), new { id = order.Id });
-        return RedirectToAction(nameof(Details), new { id = 2 });
-    }
-    
-    [HttpPost]
     public async Task<IActionResult> Checkout(long cartId)
     {
         var customer = await GetCurrentCustomer();
