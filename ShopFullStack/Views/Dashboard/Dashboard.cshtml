@@ -74,8 +74,6 @@
             }
         </ul>
     </div>
-
-   
     
     <!-- Products which have an expiration date of more than 3 months -->
     <div class="mb-5">
@@ -149,6 +147,30 @@
         </ul>
     </div>
     
+    <!-- a list of the most frequently purchased goods -->
+    <div class="mb-5">
+        <h2 class="text-primary">Most popular Products</h2>
+        <ul class="list-group">
+            @if (Model.MostPopularProducts.Any())
+            {
+                @foreach (var product in Model.MostPopularProducts)
+                {
+                    <a asp-controller="Dashboard" asp-action="ProductDetailsAdmin" asp-route-id="@product.Id"
+                       class="text-decoration-none">
+                        <li class="list-group-item">
+                            <strong>@product.Name</strong>
+                            <span class="text-warning">Stock quantity: @product.Stock</span>
+                        </li>
+                    </a>
+                }
+            }
+            else
+            {
+                <li class="list-group-item text-muted">No product will expire in the next 3 months.</li>
+            }
+        </ul>
+    </div>
+
     <!-- Pie Chart Section -->
     <div class="dashboard-section">
         <h2>Product Sales</h2>
