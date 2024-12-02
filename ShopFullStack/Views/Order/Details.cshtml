@@ -18,20 +18,19 @@
                     @Model.Status.ToString()
                 </span>
             </p>
-            <p><strong>Created At:</strong> @Model.CreatedAt</p>
-
-            <!-- Update Order Status Form -->
-            @* <form method="post" action="@Url.Action("UpdateStatus", "Order", new { id = Model.Id })"> *@
-            @*     <div class="mb-3"> *@
-            @*         <label for="Status" class="form-label">Update Order Status</label> *@
-            @*         <select class="form-select" id="Status" name="status"> *@
-            @*             <option value="0" @(Model.Status == OrderStatus.Pending ? "selected" : "")>Pending</option> *@
-            @*             <option value="1" @(Model.Status == OrderStatus.Shipped ? "selected" : "")>Shipped</option> *@
-            @*             <option value="2" @(Model.Status == OrderStatus.Delivered ? "selected" : "")>Delivered</option> *@
-            @*         </select> *@
-            @*     </div> *@
-            @*     <button type="submit" class="btn btn-primary">Update Status</button> *@
-            @* </form> *@
+            <p class="text-muted">
+                <strong>Shipping at:</strong>
+                @if (Model.ShippedAt.HasValue)
+                {
+                    @Model.ShippedAt.Value.ToString("yyyy-MM-dd HH:mm")
+                }
+                else
+                {
+                    <span class="text-warning">Awaiting shipment</span>
+                }
+                <br/>
+                Created on: @Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+            </p>
         </div>
     </div>
 
