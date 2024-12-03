@@ -29,24 +29,6 @@ public class OrderController: Controller
         _cartService = cartService;
         _stripePaymentService = stripePaymentService;
     }
-    
-    [HttpGet]
-    public async Task<IActionResult> Details(long id)
-    {
-        Console.WriteLine($"orderId: {id}");
-        var customer = await GetCurrentCustomer();
-        if (customer == null)
-        {
-            return RedirectToAction("OrdersPage", "Order");
-        }
-        var response = await _orderService.GetOrderById(id, customer.Id);
-        var order = response.Data;
-        if (order != null)
-        {
-            Console.WriteLine($"OrderItems: {order.OrderItems.Count}");
-        }
-        return View(order ?? new Order());
-    }
 
     [HttpPost]
     public async Task<IActionResult> Checkout(long cartId)
@@ -127,13 +109,37 @@ public class OrderController: Controller
         var customerResponse = await  _customerService.GetCustomerByEmail(email);
         var customer = customerResponse.Data;
         if (customer != null){
-            var response = await _orderService.GetAllOrders(customer.Id);
+            var response = User.IsInRole("Admin") ? 
+                await _orderService.AdminGetAllOrders() : 
+                await _orderService.GetAllOrders(customer.Id);
+            
             return View(response.Data ?? new List<Order>());
         }
         else
         {
             return View(new List<Order>());
         }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> Details(long id)
+    {
+        Console.WriteLine($"orderId: {id}");
+        var customer = await GetCurrentCustomer();
+        if (customer == null)
+        {
+            return RedirectToAction("OrdersPage", "Order");
+        }
+        var response = User.IsInRole("Admin") ? 
+            await  _orderService.AdminGetOrderById(id) : 
+            await _orderService.GetOrderById(id, customer.Id);
+            
+        var order = response.Data;
+        if (order != null)
+        {
+            Console.WriteLine($"OrderItems: {order.OrderItems.Count}");
+        }
+        return View(order ?? new Order());
     }
  
     private async Task<Customer?> GetCurrentCustomer()

@@ -58,6 +58,30 @@ public class OrderService
         }
     } 
     
+    public async Task<ApiResponse<Order>> AdminGetOrderById(long orderId)
+    {
+        var response = new ApiResponse<Order>();
+        try
+        {
+            var order = await _orderRepository.AdminGetByIdAsync(orderId);
+            if (order == null)
+            {
+                response.Message = "Order not found";
+                return response;
+            }
+            response.Data = order;
+            response.Message = "Order successfully retrieved";
+            return response;
+        }
+        catch (Exception e)
+        {
+            response.Message = e.Message;
+            response.Status = false;
+            Console.WriteLine($"Failed to get order with id: {orderId} - {e}");
+            return response;
+        }
+    }
+    
     public async Task<ApiResponse<List<Order>>> AdminGetAllOrders()
     {
         var response = new ApiResponse<List<Order>>();

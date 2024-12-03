@@ -5,6 +5,7 @@ namespace ShopFullStack.Repositories.Orders;
 public interface IOrderRepository
 {
     Task<Order?> GetByIdAsync(long id, long customerId);
+    Task<Order?> AdminGetByIdAsync(long id);
     Task<List<Order>> GetAllAsync(long customerId);
     Task<List<Order>> AdminGetAllAsync();
     Task<Order> AddAsync(Order order);
