@@ -40,7 +40,11 @@ builder.Services.AddControllers();
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<AppDbContext>(
+    options => options.UseNpgsql(connectionString)
+    .EnableDetailedErrors()
+    .EnableSensitiveDataLogging()
+);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

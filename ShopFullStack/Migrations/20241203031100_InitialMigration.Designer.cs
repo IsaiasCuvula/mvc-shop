@@ -12,8 +12,8 @@ using ShopFullStack.Data;
 namespace ShopFullStack.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241203025050_InitialMigration23")]
-    partial class InitialMigration23
+    [Migration("20241203031100_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
