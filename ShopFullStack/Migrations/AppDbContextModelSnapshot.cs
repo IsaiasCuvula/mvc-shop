@@ -423,9 +423,6 @@ namespace ShopFullStack.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("order_id");
 
-                    b.Property<long?>("OrderId1")
-                        .HasColumnType("bigint");
-
                     b.Property<decimal>("PricePerItem")
                         .HasColumnType("numeric")
                         .HasColumnName("price_per_item");
@@ -445,8 +442,6 @@ namespace ShopFullStack.Migrations
                     b.HasKey("OrderItemId");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("OrderId1");
 
                     b.HasIndex("ProductId");
 
@@ -611,15 +606,11 @@ namespace ShopFullStack.Migrations
 
             modelBuilder.Entity("ShopFullStack.Models.OrderItem", b =>
                 {
-                    b.HasOne("ShopFullStack.Models.Order", null)
+                    b.HasOne("ShopFullStack.Models.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ShopFullStack.Models.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId1");
 
                     b.HasOne("ShopFullStack.Models.Product", "Product")
                         .WithMany()

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ShopFullStack.Migrations
 {
     /// <inheritdoc />
-    public partial class LoginMigration : Migration
+    public partial class InitialMigration23 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,6 @@ namespace ShopFullStack.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    Discriminator = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -50,6 +49,26 @@ namespace ShopFullStack.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "customers",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    id_card_number = table.Column<long>(type: "bigint", nullable: false),
+                    city = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
+                    address = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
+                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    email = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
+                    customer_number = table.Column<long>(type: "bigint", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_customers", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,28 +198,51 @@ namespace ShopFullStack.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "customers",
+                name: "Carts",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    id_card_number = table.Column<long>(type: "bigint", nullable: false),
-                    city = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
-                    address = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
-                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    email = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
-                    customer_number = table.Column<long>(type: "bigint", nullable: false),
-                    user_id = table.Column<string>(type: "text", nullable: false)
+                    customer_id = table.Column<long>(type: "bigint", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_customers", x => x.id);
+                    table.PrimaryKey("PK_Carts", x => x.id);
                     table.ForeignKey(
-                        name: "FK_customers_AspNetUsers_user_id",
-                        column: x => x.user_id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        name: "FK_Carts_customers_customer_id",
+                        column: x => x.customer_id,
+                        principalTable: "customers",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartItems",
+                columns: table => new
+                {
+                    cart_item_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    total = table.Column<decimal>(type: "numeric", nullable: false),
+                    product_id = table.Column<long>(type: "bigint", nullable: false),
+                    cart_id = table.Column<long>(type: "bigint", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartItems", x => x.cart_item_id);
+                    table.ForeignKey(
+                        name: "FK_CartItems_Carts_cart_id",
+                        column: x => x.cart_id,
+                        principalTable: "Carts",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CartItems_products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "products",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -210,31 +252,68 @@ namespace ShopFullStack.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    customer_number = table.Column<long>(type: "bigint", nullable: false),
-                    product_number = table.Column<long>(type: "bigint", nullable: false),
-                    ProductId = table.Column<long>(type: "bigint", nullable: true),
-                    quantity = table.Column<int>(type: "integer", nullable: false),
-                    order_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    payment_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    payment_status = table.Column<int>(type: "integer", nullable: false),
-                    return_status = table.Column<int>(type: "integer", nullable: false),
+                    customer_id = table.Column<long>(type: "bigint", nullable: false),
+                    cart_id = table.Column<long>(type: "bigint", nullable: false),
                     total = table.Column<decimal>(type: "numeric", nullable: false),
-                    group_order_id = table.Column<string>(type: "text", nullable: false),
-                    CustomerId = table.Column<long>(type: "bigint", nullable: true)
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    payment_status = table.Column<int>(type: "integer", nullable: false),
+                    order_returned_status = table.Column<int>(type: "integer", nullable: false),
+                    shipping_address = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    shipped_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    delivered_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ProductId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_orders", x => x.id);
                     table.ForeignKey(
-                        name: "FK_orders_customers_CustomerId",
-                        column: x => x.CustomerId,
+                        name: "FK_orders_Carts_cart_id",
+                        column: x => x.cart_id,
+                        principalTable: "Carts",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_orders_customers_customer_id",
+                        column: x => x.customer_id,
                         principalTable: "customers",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_orders_products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "products",
                         principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItems",
+                columns: table => new
+                {
+                    order_item_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    order_id = table.Column<long>(type: "bigint", nullable: false),
+                    product_id = table.Column<long>(type: "bigint", nullable: false),
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    price_per_item = table.Column<decimal>(type: "numeric", nullable: false),
+                    total = table.Column<decimal>(type: "numeric", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItems", x => x.order_item_id);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "orders",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "products",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -275,14 +354,40 @@ namespace ShopFullStack.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_customers_user_id",
-                table: "customers",
-                column: "user_id");
+                name: "IX_CartItems_cart_id",
+                table: "CartItems",
+                column: "cart_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_CustomerId",
+                name: "IX_CartItems_product_id",
+                table: "CartItems",
+                column: "product_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Carts_customer_id",
+                table: "Carts",
+                column: "customer_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_order_id",
+                table: "OrderItems",
+                column: "order_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_product_id",
+                table: "OrderItems",
+                column: "product_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_cart_id",
                 table: "orders",
-                column: "CustomerId");
+                column: "cart_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_customer_id",
+                table: "orders",
+                column: "customer_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_orders_ProductId",
@@ -309,19 +414,28 @@ namespace ShopFullStack.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "orders");
+                name: "CartItems");
+
+            migrationBuilder.DropTable(
+                name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "customers");
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "orders");
+
+            migrationBuilder.DropTable(
+                name: "Carts");
 
             migrationBuilder.DropTable(
                 name: "products");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "customers");
         }
     }
 }

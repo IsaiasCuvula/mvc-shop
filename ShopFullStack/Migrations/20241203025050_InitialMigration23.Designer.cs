@@ -12,8 +12,8 @@ using ShopFullStack.Data;
 namespace ShopFullStack.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241201001139_AddedCartTable")]
-    partial class AddedCartTable
+    [Migration("20241203025050_InitialMigration23")]
+    partial class InitialMigration23
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -234,6 +234,10 @@ namespace ShopFullStack.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
                     b.Property<long>("CustomerId")
                         .HasColumnType("bigint")
                         .HasColumnName("customer_id");
@@ -243,7 +247,7 @@ namespace ShopFullStack.Migrations
                     b.HasIndex("CustomerId")
                         .IsUnique();
 
-                    b.ToTable("Cart");
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("ShopFullStack.Models.CartItem", b =>
@@ -259,12 +263,13 @@ namespace ShopFullStack.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("cart_id");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer")
-                        .HasColumnName("product_id");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
 
-                    b.Property<long>("ProductId1")
-                        .HasColumnType("bigint");
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("product_id");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer")
@@ -278,7 +283,7 @@ namespace ShopFullStack.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("ProductId1");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("CartItems");
                 });
@@ -349,44 +354,45 @@ namespace ShopFullStack.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("CustomerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("CustomerNumber")
+                    b.Property<long>("CartId")
                         .HasColumnType("bigint")
-                        .HasColumnName("customer_number");
+                        .HasColumnName("cart_id");
 
-                    b.Property<string>("GroupOrderId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("group_order_id");
-
-                    b.Property<DateTime>("OrderDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("order_date");
+                        .HasColumnName("created_at");
 
-                    b.Property<DateTime>("PaymentDate")
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("customer_id");
+
+                    b.Property<DateTime?>("DeliveredAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("payment_date");
+                        .HasColumnName("delivered_at");
 
-                    b.Property<int>("PaymentStatus")
+                    b.Property<int>("OrderPaymentStatus")
                         .HasColumnType("integer")
                         .HasColumnName("payment_status");
+
+                    b.Property<int>("OrderReturnedStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("order_returned_status");
 
                     b.Property<long?>("ProductId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("ProductNumber")
-                        .HasColumnType("bigint")
-                        .HasColumnName("product_number");
+                    b.Property<DateTime?>("ShippedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("shipped_at");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer")
-                        .HasColumnName("quantity");
+                    b.Property<string>("ShippingAddress")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("shipping_address");
 
-                    b.Property<int>("ReturnStatus")
+                    b.Property<int>("Status")
                         .HasColumnType("integer")
-                        .HasColumnName("return_status");
+                        .HasColumnName("status");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("numeric")
@@ -394,11 +400,55 @@ namespace ShopFullStack.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CartId");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("orders");
+                });
+
+            modelBuilder.Entity("ShopFullStack.Models.OrderItem", b =>
+                {
+                    b.Property<long>("OrderItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("order_item_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("OrderItemId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<long>("OrderId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("order_id");
+
+                    b.Property<decimal>("PricePerItem")
+                        .HasColumnType("numeric")
+                        .HasColumnName("price_per_item");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("product_id");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("numeric")
+                        .HasColumnName("total");
+
+                    b.HasKey("OrderItemId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("ShopFullStack.Models.Product", b =>
@@ -525,7 +575,7 @@ namespace ShopFullStack.Migrations
 
                     b.HasOne("ShopFullStack.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId1")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -536,15 +586,42 @@ namespace ShopFullStack.Migrations
 
             modelBuilder.Entity("ShopFullStack.Models.Order", b =>
                 {
+                    b.HasOne("ShopFullStack.Models.Cart", "Cart")
+                        .WithMany()
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ShopFullStack.Models.Customer", "Customer")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("ShopFullStack.Models.Product", "Product")
+                    b.HasOne("ShopFullStack.Models.Product", null)
                         .WithMany("Orders")
                         .HasForeignKey("ProductId");
 
+                    b.Navigation("Cart");
+
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("ShopFullStack.Models.OrderItem", b =>
+                {
+                    b.HasOne("ShopFullStack.Models.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopFullStack.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
@@ -560,6 +637,11 @@ namespace ShopFullStack.Migrations
                         .IsRequired();
 
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("ShopFullStack.Models.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("ShopFullStack.Models.Product", b =>
