@@ -99,7 +99,7 @@ public class OrderController: Controller
             }
             
             var sessionUrl =   _stripePaymentService.MakePayment(
-                customer.Email,
+                customer,
                 successUrl,
                 cancelUrl,
                 savedOrder

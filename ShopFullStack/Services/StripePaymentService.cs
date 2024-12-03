@@ -2,6 +2,7 @@ using Microsoft.Extensions.Options;
 using ShopFullStack.Models;
 using ShopFullStack.Utilities;
 using Stripe;
+using Customer = ShopFullStack.Models.Customer;
 
 namespace ShopFullStack.Services;
 
@@ -14,7 +15,7 @@ public class StripePaymentService
     }
       
      public string MakePayment(
-         string email,
+         Customer appCustomer,
          string successUrl,
          string cancelUrl,
          Order order
@@ -25,7 +26,9 @@ public class StripePaymentService
              var customerService = new Stripe.CustomerService();
              var customerOptions = new CustomerCreateOptions
              {
-                 Email = email,
+                 Email = appCustomer.Email,
+                 Phone = appCustomer.Phone,
+                 Name = appCustomer.Name,
              };
              var customer = customerService.Create(customerOptions);
 
