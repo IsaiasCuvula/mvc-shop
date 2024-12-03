@@ -13,18 +13,21 @@ public class OrderController: Controller
     private readonly CartService _cartService;
     private readonly CustomerService _customerService;
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly StripePaymentService _stripePaymentService;
     
     public OrderController(
         OrderService orderService, 
         UserManager<IdentityUser> userManager,
         CustomerService customerService,
-        CartService cartService
+        CartService cartService,
+        StripePaymentService stripePaymentService
     )
     {
         _userManager = userManager;
         _orderService = orderService;
         _customerService = customerService;
         _cartService = cartService;
+        _stripePaymentService = stripePaymentService;
     }
     
     [HttpGet]
@@ -65,6 +68,7 @@ public class OrderController: Controller
         }
         else
         {
+            
             var customerResponse = await _customerService
                 .GetCustomerById(cart.CustomerId);
             
@@ -82,11 +86,36 @@ public class OrderController: Controller
                 order.ShippingAddress = customerResponse.Data.Address;
                 order.Customer = customerResponse.Data;
             }
-            await _orderService.CreateOrder(order);
+            var orderResponse = await _orderService.CreateOrder(order);
+            
+            var successUrl = Url.Action("OrdersPage", "Order", null, Request.Scheme);
+            var cancelUrl = Url.Action("CartPage", "Cart", null, Request.Scheme);
+
+            var savedOrder = orderResponse.Data;
+
+            if (savedOrder == null)
+            {
+                return RedirectToAction("CartPage", "Cart");
+            }
+            
+            var sessionUrl =   _stripePaymentService.MakePayment(
+                customer.Email,
+                successUrl,
+                cancelUrl,
+                savedOrder
+            );
+            
+            if (string.IsNullOrEmpty(sessionUrl))
+            {
+                // Handle the case where session creation failed
+                return RedirectToAction("Error", "Home");
+            }
+            
+            //
             //After placing order clear the cart
             await _cartService.ClearCartById(cartId, customerId);
             
-            return RedirectToAction("OrdersPage", "Order");
+            return Redirect(sessionUrl);
         }
     }
     

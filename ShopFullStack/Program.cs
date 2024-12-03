@@ -33,6 +33,8 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<CartService>();
 
+builder.Services.AddScoped<StripePaymentService>();
+
 builder.Services.AddControllers();
 
 // Add services to the container.
