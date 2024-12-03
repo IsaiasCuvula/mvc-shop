@@ -13,6 +13,8 @@
             <p><strong>Customer Id:</strong> @Model.CustomerId</p>
             <p><strong>Shipping Address:</strong> @Model.ShippingAddress</p>
             <p><strong>Total:</strong> $@Model.Total</p>
+            <strong>Payment status: </strong>@Model.OrderPaymentStatus<br/>
+            <strong>Returned status: </strong>@Model.OrderReturnedStatus<br/>
             <p><strong>Status:</strong>
                 <span class="badge @GetOrderStatusClass(@Model.Status)">
                     @Model.Status.ToString()
@@ -31,6 +33,11 @@
                 <br/>
                 Created on: @Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")
             </p>
+            <br/>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="EditOrderStatus" asp-route-id="@Model.Id" class="btn btn-warning">Edit Status</a>
+            }
         </div>
     </div>
 

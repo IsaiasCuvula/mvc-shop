@@ -158,35 +158,33 @@ public class OrderService
     }
     
     
-    public async Task<ApiResponse<Order>> UpdateOrder(Order order)
+    public async Task<ApiResponse<Order>> UpdateOrderStatus(Order newOrder)
     {
         var response = new ApiResponse<Order>();
         try
         {
-            // var oldOrder = await _orderRepository.GetByIdAsync(order.Id);
-            // if (oldOrder == null)
-            // {
-            //     response.Message = "Order not found";
-            //     return response;
-            // }
-            //
-            // order.Total = await GetTotalByProduct(dto);
-            // order.Quantity = dto.Quantity;
-            // order.CustomerNumber = dto.CustomerNumber;
-            // order.ProductNumber = dto.ProductNumber;
-            // order.ReturnStatus = dto.ReturnStatus;
-            //
-            var updatedOrder = await _orderRepository.UpdateAsync(order);
+            var oldOrder = await _orderRepository.AdminGetByIdAsync(newOrder.Id);
+            if (oldOrder == null)
+            {
+                response.Message = "Order not found";
+                return response;
+            }
+
+            oldOrder.OrderPaymentStatus = newOrder.OrderPaymentStatus;
+            oldOrder.OrderReturnedStatus = newOrder.OrderReturnedStatus;
+            oldOrder.Status = newOrder.Status;
+
+            var updatedOrder = await _orderRepository.UpdateAsync(oldOrder);
            
             response.Data = updatedOrder;
-            response.Message = "Order updated successfully";
+            response.Message = "Order status updated successfully";
             return response;
         }
         catch (Exception e)
         {
             response.Message = e.Message;
             response.Status = false;
-            Console.WriteLine($"Failed to updated order with id: {order.Id} - {e}");
+            Console.WriteLine($"Failed to updated order with id: {newOrder.Id} - {e}");
             return response;
         }
     }

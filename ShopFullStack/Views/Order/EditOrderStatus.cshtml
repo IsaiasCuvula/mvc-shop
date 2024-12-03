@@ -1,0 +1,36 @@
+@model Order
+
+@using ShopFullStack.Utilities
+
+@{
+    ViewData["Title"] = "Edit Order Status";
+}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h4>Edit Order Status</h4>
+        <form asp-action="EditOrderStatus" asp-controller="Order" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label for="OrderPaymentStatus">Payment Status</label>
+                <select asp-for="OrderPaymentStatus" class="form-control" asp-items="Html.GetEnumSelectList<PaymentStatus>()">
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="OrderReturnedStatus">Returned Status</label>
+                <select asp-for="OrderReturnedStatus" class="form-control" asp-items="Html.GetEnumSelectList<ReturnStatus>()">
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="Status">Order Status</label>
+                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<OrderStatus>()">
+                </select>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>

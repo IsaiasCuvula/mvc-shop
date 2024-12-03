@@ -101,6 +101,41 @@ public class OrderController: Controller
         }
     }
     
+    [HttpPost]
+    public async Task<IActionResult> EditOrderStatus(Order newOrder)
+    {
+        if (User.IsInRole("Admin"))
+        {
+            if (ModelState.IsValid)
+            {
+               var result = await _orderService.UpdateOrderStatus(newOrder);
+               if (result.Data == null)
+               {
+                   return View(newOrder);
+               }
+               return RedirectToAction(
+                   "Details",
+                   "Order", 
+                   new { id = result.Data.Id }
+               );
+            }
+        }
+        return View(newOrder);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> EditOrderStatus(int id)
+    {
+        var response = await _orderService.AdminGetOrderById(id);
+        var order = response.Data;
+        if (order == null)
+        {
+            return RedirectToAction("OrdersPage", "Order");
+        }
+        return View(order);
+    }
+
+    
     [HttpGet]
     public async Task<IActionResult>  OrdersPage()
     {  
