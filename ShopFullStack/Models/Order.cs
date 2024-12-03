@@ -46,4 +46,7 @@ public class Order
         
    [Column("shipped_at")]
    public DateTime? ShippedAt { get; set; }
+   
+   [Column("delivered_at")]
+   public DateTime? DeliveredAt { get; set; }
 }

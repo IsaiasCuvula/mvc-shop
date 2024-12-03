@@ -174,6 +174,15 @@ public class OrderService
             oldOrder.OrderReturnedStatus = newOrder.OrderReturnedStatus;
             oldOrder.Status = newOrder.Status;
 
+            if (newOrder.Status == OrderStatus.Shipped)
+            {
+                oldOrder.ShippedAt = DateTime.Now.ToUniversalTime();
+            }
+            else if (newOrder.Status == OrderStatus.Delivered)
+            {
+               oldOrder.DeliveredAt = DateTime.Now.ToUniversalTime(); 
+            }
+
             var updatedOrder = await _orderRepository.UpdateAsync(oldOrder);
            
             response.Data = updatedOrder;

@@ -31,6 +31,16 @@
                     <span class="text-warning">Awaiting shipment</span>
                 }
                 <br/>
+                <strong>Delivered at:</strong>
+                @if (Model.DeliveredAt.HasValue)
+                {
+                    @Model.DeliveredAt.Value.ToString("yyyy-MM-dd HH:mm")
+                }
+                else
+                {
+                    <span class="text-warning">Awaiting deliver</span>
+                }
+                <br/>
                 Created on: @Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")
             </p>
             <br/>
