@@ -53,8 +53,11 @@ public class StripePaymentService
                                      { "CustomerId", order.CustomerId.ToString() },
                                      { "ShippingAddress", order.ShippingAddress },
                                      { "CreatedAt", order.CreatedAt.ToString("o") },
-                                     { "Status", order.Status.ToString() },
-                                     { "PaymentStatus", PaymentStatus.Paid.ToString() }
+                                     { "Order Status", order.Status.ToString() },
+                                     { "PaymentStatus", PaymentStatus.Paid.ToString() },
+                                     { "Customer email: ", appCustomer.Email },
+                                     { "Customer phone", appCustomer.Phone },
+                                     { "Customer name", appCustomer.Name },
                                  }
                              },
                          },
